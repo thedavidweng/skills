@@ -1,3 +1,5 @@
+[English](README.md) | [中文](README.zh-CN.md)
+
 # David's Skills
 
 **AI agent skills for content operations and developer workflows.**
@@ -70,7 +72,7 @@ Systematic codebase maintenance for AI-first and vibe-coding teams.
 
 | Skill | Description |
 |-------|-------------|
-| **[entropy-reduction](entropy-reduction/)** | Identify and fix structural, semantic, behavioral, and evolutionary disorder through safe, incremental refactoring. |
+|| **[entropy-reduction](code-review/entropy-reduction/)** | Identify and fix structural, semantic, behavioral, and evolutionary disorder through safe, incremental refactoring. |
 
 ---
 
@@ -79,12 +81,13 @@ Systematic codebase maintenance for AI-first and vibe-coding teams.
 Once installed, prompt your agent naturally:
 
 ```
+"Build a wiki from my notes and messages"
+"Audit my wiki for broken links and orphan pages"
 "Write a YouTube description for this video"
-"Generate titles that match my channel style"
-"Batch update metadata for my last 5 uploads"
+"Refactor this codebase to reduce tech debt"
 ```
 
-The skill detects available tools (yutu vs. youtube-transcript-api), fetches transcripts, learns your channel's brand style, and produces copy — with mandatory user review before any API writes.
+Each skill auto-detects the appropriate workflow, fetches context from your data or codebase, and produces results. Agent Skills follow the standard format: each skill directory contains a `SKILL.md` with the full workflow spec, and optional `references/` with templates, cheatsheets, and examples.
 
 ---
 
@@ -94,14 +97,17 @@ Each skill follows the standard Agent Skills format:
 
 ```
 skill-name/
-├── README.md          # Quick overview for humans
 ├── SKILL.md           # Full workflow spec for the agent
+├── agents/
+│   └── openai.yaml    # UI metadata
 └── references/        # Templates, cheatsheets, examples
 ```
 
-- `README.md` — what it does, requirements, quick start
 - `SKILL.md` — commands, decision trees, pitfalls, pre-publish checklist
-- `references/` — brand guide templates, CLI command references
+- `agents/openai.yaml` — skill name and description for agent UI discovery
+- `references/` — brand guide templates, CLI command references, supporting docs
+
+Category directories (e.g. `wiki/`, `code-review/`) contain a `README.md` summarizing all skills in that group.
 
 ---
 

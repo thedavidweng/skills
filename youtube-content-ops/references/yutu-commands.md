@@ -1,177 +1,178 @@
-# yutu 命令速查
+# yutu Command Reference
 
-完整的 yutu CLI 命令参考，用于 YouTube API 操作。
+Complete yutu CLI command reference for YouTube API operations.
 
-## 认证
+## Authentication
 
 ```bash
-# 首次授权
+# First-time authorization
 yutu auth --credential client_secret.json
 
-# 指定 token 存储位置
+# Specify token storage location
 yutu auth --credential client_secret.json --cacheToken token.json
 ```
 
-## 字幕操作 (caption)
+## Captions
 
 ```bash
-# 列出视频所有字幕
+# List all captions for a video
 yutu caption list --videoId VIDEO_ID --output json
 
-# 下载字幕
+# Download a caption
 yutu caption download --id CAPTION_ID --file output.srt --tfmt srt
 
-# 下载为 VTT 格式
+# Download as VTT format
 yutu caption download --id CAPTION_ID --file output.vtt --tfmt vtt
 
-# 下载翻译后的字幕
+# Download translated caption
 yutu caption download --id CAPTION_ID --file output.srt --tlang zh-Hans
 
-# 上传字幕
+# Upload a caption
 yutu caption insert --videoId VIDEO_ID --file subtitle.srt --language en
 
-# 删除字幕
+# Delete a caption
 yutu caption delete --id CAPTION_ID
 ```
 
-## 视频操作 (video)
+## Videos
 
 ```bash
-# 获取视频信息
+# Get video info
 yutu video list --ids VIDEO_ID --output json
 
-# 获取多个视频信息
+# Get info for multiple videos
 yutu video list --ids VIDEO_ID1,VIDEO_ID2,VIDEO_ID3 --output json
 
-# 更新视频标题
-yutu video update --id VIDEO_ID --title "新标题"
+# Update video title
+yutu video update --id VIDEO_ID --title "New Title"
 
-# 更新视频描述
-yutu video update --id VIDEO_ID --description "新描述"
+# Update video description
+yutu video update --id VIDEO_ID --description "New Description"
 
-# 更新视频标签
+# Update video tags
 yutu video update --id VIDEO_ID --tags "tag1,tag2,tag3"
 
-# 更新视频分类
+# Update video category
 yutu video update --id VIDEO_ID --categoryId 27
 
-# 更新隐私设置
+# Update privacy setting
 yutu video update --id VIDEO_ID --privacy public    # public/private/unlisted
 
-# 组合更新
+# Batch update
 yutu video update --id VIDEO_ID \
-  --title "标题" \
-  --description "描述" \
+  --title "Title" \
+  --description "Description" \
   --tags "tag1,tag2" \
   --privacy public
 
-# 删除视频
+# Delete a video
 yutu video delete --id VIDEO_ID
 ```
 
-## 频道操作 (channel)
+## Channels
 
 ```bash
-# 列出用户管理的频道
+# List channels managed by the user
 yutu channel list --output json
 
-# 获取频道详情
+# Get channel details
 yutu channel list --id CHANNEL_ID --output json
 
-# 更新频道信息
-yutu channel update --id CHANNEL_ID --title "频道名称" --description "频道描述"
+# Update channel info
+yutu channel update --id CHANNEL_ID --title "Channel Name" --description "Channel Description"
 ```
 
-## 播放列表操作 (playlist)
+## Playlists
 
 ```bash
-# 列出频道的播放列表
+# List channel playlists
 yutu playlist list --mine --output json
 
-# 创建播放列表
-yutu playlist insert --title "播放列表名称" --description "描述" --privacy public
+# Create a playlist
+yutu playlist insert --title "Playlist Name" --description "Description" --privacy public
 
-# 更新播放列表
-yutu playlist update --id PLAYLIST_ID --title "新名称"
+# Update a playlist
+yutu playlist update --id PLAYLIST_ID --title "New Name"
 
-# 删除播放列表
+# Delete a playlist
 yutu playlist delete --id PLAYLIST_ID
 ```
 
-## 播放列表项操作 (playlistItem)
+## Playlist Items
 
 ```bash
-# 列出播放列表中的视频
+# List videos in a playlist
 yutu playlistItem list --playlistId PLAYLIST_ID --output json
 
-# 添加视频到播放列表
+# Add a video to a playlist
 yutu playlistItem insert --playlistId PLAYLIST_ID --videoId VIDEO_ID
 
-# 从播放列表移除视频
+# Remove a video from a playlist
 yutu playlistItem delete --id PLAYLIST_ITEM_ID
 ```
 
-## 缩略图操作 (thumbnail)
+## Thumbnails
 
 ```bash
-# 设置视频缩略图
+# Set video thumbnail
 yutu thumbnail set --videoId VIDEO_ID --file thumbnail.jpg
 ```
 
-## 搜索操作 (search)
+## Search
 
 ```bash
-# 搜索视频
-yutu search --query "搜索关键词" --type video --maxResults 10 --output json
+# Search videos
+yutu search --query "search keyword" --type video --maxResults 10 --output json
 
-# 搜索播放列表
-yutu search --query "搜索关键词" --type playlist --maxResults 10
+# Search playlists
+yutu search --query "search keyword" --type playlist --maxResults 10
 
-# 搜索频道
-yutu search --query "搜索关键词" --type channel --maxResults 10
+# Search channels
+yutu search --query "search keyword" --type channel --maxResults 10
 ```
 
-## 订阅操作 (subscription)
+## Subscriptions
 
 ```bash
-# 列出用户的订阅
+# List user subscriptions
 yutu subscription list --output json
 
-# 订阅频道
+# Subscribe to a channel
 yutu subscription insert --channelId CHANNEL_ID
 
-# 取消订阅
+# Unsubscribe
 yutu subscription delete --id SUBSCRIPTION_ID
 ```
 
-## 评论操作 (comment)
+## Comments
 
 ```bash
-# 列出视频评论
+# List video comments
 yutu comment list --videoId VIDEO_ID --output json
 
-# 发表评论
-yutu comment insert --videoId VIDEO_ID --text "评论内容"
+# Post a comment
+yutu comment insert --videoId VIDEO_ID --text "Comment text"
 
-# 回复评论
-yutu comment insert --parentId COMMENT_ID --text "回复内容"
+# Reply to a comment
+yutu comment insert --parentId COMMENT_ID --text "Reply text"
 
-# 删除评论
+# Delete a comment
 yutu comment delete --id COMMENT_ID
 ```
 
-## 输出格式
+## Output Formats
 
-所有 `--output` 参数支持：
-- `table` - 表格格式（默认）
-- `json` - JSON 格式
-- `yaml` - YAML 格式
+All `--output` flags support:
+- `table` - Table format (default)
+- `json` - JSON format
+- `yaml` - YAML format
 
-## 视频分类 ID
+## Video Category IDs
 
-常用分类（美国）：
-| ID | 分类 |
-|----|------|
+Common categories (US):
+
+| ID | Category |
+|----|----------|
 | 1 | Film & Animation |
 | 2 | Autos & Vehicles |
 | 10 | Music |
@@ -187,33 +188,33 @@ yutu comment delete --id COMMENT_ID
 | 28 | Science & Technology |
 | 29 | Nonprofits & Activism |
 
-完整分类列表：
+Full category list:
 ```bash
 yutu videoCategory list --output json
 ```
 
-## 环境变量
+## Environment Variables
 
 ```bash
-# 凭证文件路径
-export YUTU_CREDENTIAL=/path/to/client_secret.json
+# Credential file path
+export YUTU_CREDENTIAL=/path/...json
 
-# Token 文件路径
-export YUTU_TOKEN=/path/to/token.json
+# Token file path
+export YUTU_TOKEN=/path/...json
 
-# 工作目录
+# Working directory
 export YUTU_ROOT=/path/to/workspace
 
-# 日志级别
+# Log level
 export YUTU_LOG_LEVEL=DEBUG
 ```
 
-## 错误排查
+## Troubleshooting
 
-| 错误 | 原因 | 解决方案 |
-|------|------|---------|
-| `dailyLimitExceeded` | API 配额用尽 | 等待次日重置或申请更高配额 |
-| `authError` | Token 过期或无效 | 重新运行 `yutu auth` |
-| `forbidden` | 无权限操作该资源 | 确认 OAuth 授权范围 |
-| `notFound` | 视频/频道不存在 | 检查 ID 是否正确 |
-| `quotaExceeded` | 请求频率过高 | 降低请求频率 |
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `dailyLimitExceeded` | API quota exhausted | Wait for next day or request higher quota |
+| `authError` | Token expired or invalid | Re-run `yutu auth` |
+| `forbidden` | No permission for this resource | Check OAuth scope |
+| `notFound` | Video/channel does not exist | Verify the ID is correct |
+| `quotaExceeded` | Request rate too high | Reduce request frequency |
