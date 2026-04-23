@@ -17,3 +17,7 @@ Personal knowledge management skills for building, auditing, and publishing wiki
 | [wiki-source-integration](wiki-source-integration/SKILL.md) | USE THIS SKILL whenever the user wants to: decide how to store source |
 | [wiki-sources-integrity](wiki-sources-integrity/SKILL.md) | Protect wiki Sources sections during batch operations. USE THIS SKILL |
 | [wiki-vcf-import](wiki-vcf-import/SKILL.md) | USE THIS SKILL whenever the user wants to: import VCF contacts into an Obsidian vault wiki, convert contact exports to p... |
+
+## Acknowledgements
+
+This wiki system is inspired by Andrej Karpathy's [llm-wiki-karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) and Farza's [Farzapedia](https://x.com/FarzaTV/status/2040563939797504467).
