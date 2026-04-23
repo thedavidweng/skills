@@ -93,99 +93,14 @@ git remote add origin https://github.com/YOU/your-wiki-site.git
 
 ### 1.2 Configure quartz.config.ts
 
-Key settings for a personal wiki:
+Key settings:
+- `pageTitle`: Your wiki name
+- `baseUrl`: Your Cloudflare Pages domain
+- `ignorePatterns`: `["private", "templates", ".obsidian", "inbox", "sources"]`
+- `analytics: null`, `enableRSS: false` (privacy)
+- `filters: [Plugin.ExplicitPublish()]` — **only pages with `publish: true` are built**
 
-```typescript
-const config: QuartzConfig = {
-  configuration: {
-    pageTitle: "Your Wiki Name",
-    pageTitleSuffix: "",
-    enableSPA: true,
-    enablePopovers: true,
-    analytics: null,               // No analytics for privacy
-    locale: "en-US",
-    baseUrl: "your-wiki.pages.dev", // Your Cloudflare Pages domain
-    ignorePatterns: [
-      "private",
-      "templates",
-      ".obsidian",
-      "inbox",                     // Never publish inbox
-      "sources",                   // Raw sources stay private
-    ],
-    defaultDateType: "modified",
-    theme: {
-      fontOrigin: "googleFonts",
-      cdnCaching: true,
-      typography: {
-        title: "Fraunces",
-        header: "Instrument Sans",
-        body: "Instrument Sans",
-        code: "IBM Plex Mono",
-      },
-      colors: {
-        lightMode: {
-          light: "#f6f3ee",
-          lightgray: "#ddd7cc",
-          gray: "#a39a8a",
-          darkgray: "#50493f",
-          dark: "#201c17",
-          secondary: "#2f5a77",
-          tertiary: "#6c8f76",
-          highlight: "rgba(47, 90, 119, 0.12)",
-          textHighlight: "#e9d66b66",
-        },
-        darkMode: {
-          light: "#171411",
-          lightgray: "#3a342d",
-          gray: "#7f7668",
-          darkgray: "#dad1c6",
-          dark: "#f2ede6",
-          secondary: "#8eb9d8",
-          tertiary: "#9fc7aa",
-          highlight: "rgba(142, 185, 216, 0.18)",
-          textHighlight: "#d4be4f66",
-        },
-      },
-    },
-  },
-  plugins: {
-    transformers: [
-      Plugin.FrontMatter(),
-      Plugin.CreatedModifiedDate({
-        priority: ["frontmatter", "git", "filesystem"],
-      }),
-      Plugin.SyntaxHighlighting({
-        theme: {
-          light: "github-light",
-          dark: "github-dark",
-        },
-        keepBackground: false,
-      }),
-      Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
-      Plugin.GitHubFlavoredMarkdown(),
-      Plugin.TableOfContents(),
-      Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
-      Plugin.Description(),
-    ],
-    filters: [Plugin.ExplicitPublish()],   // Only publish pages with publish: true
-    emitters: [
-      Plugin.AliasRedirects(),
-      Plugin.ComponentResources(),
-      Plugin.ContentPage(),
-      Plugin.FolderPage(),
-      Plugin.TagPage(),
-      Plugin.ContentIndex({
-        enableSiteMap: true,
-        enableRSS: false,              // No RSS for privacy
-      }),
-      Plugin.Assets(),
-      Plugin.Static(),
-      Plugin.NotFoundPage(),
-    ],
-  },
-}
-```
-
+*(See `references/quartz-config.ts` for full example)*
 ### Important: ExplicitPublish Plugin
 
 The `Plugin.ExplicitPublish()` filter means **only pages with `publish: true` in frontmatter are published**. This is your safety net.
@@ -260,6 +175,15 @@ A personal knowledge base.
 
 ## Step 3: CI/CD Pipeline
 
+Two workflows:
+
+**Content repo** (`.github/workflows/publish-site.yml`):
+On push to `wiki/` or `system/`, dispatch `repository_dispatch` event to site repo.
+
+**Site repo** (`.github/workflows/deploy.yml`):
+On `repository_dispatch` or push: checkout content → run `sync-content.mjs` → `npx quartz build` → `wrangler pages deploy`.
+
+*(See `references/deploy.yml` for full workflow files)*
 ### Content repo workflow (`.github/workflows/publish-site.yml`):
 
 ```yaml
@@ -410,28 +334,4 @@ Before going live:
 
 ## Output Format
 
-After setup, present:
-
-```
-Quartz Site Setup Complete
-==========================
-Domain:      https://your-wiki.pages.dev
-Protection:  Cloudflare Access (Google login, 3 allowed emails)
-Content:     Syncs from YOUR/your-wiki on every push to main
-ExplicitPublish: ENABLED — only pages with `publish: true` are deployed
-
-Published sections:
-  - People: 42 pages
-  - Projects: 12 pages
-  - Places: 8 pages
-
-Sensitive content:
-  - sources/: EXCLUDED
-  - inbox/: EXCLUDED
-  - Phone/email fields: STRIPPED by sync script
-
-Next steps:
-  1. Review pages with `publish: true` — remove from any sensitive pages
-  2. Test in incognito: should redirect to login
-  3. Share allowed email list with Cloudflare Access
-```
+After setup, present: domain, protection method, content source, ExplicitPublish status, published section counts, sensitive content exclusions, and next steps (review `publish: true` pages, test incognito, share allowed emails).
