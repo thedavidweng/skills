@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "skills": {
+    "entropy-reduction": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "a3a1646d0631caae38341e485d4e2fb810c351a10211513e059c54120eac1234"
+    },
+    "quartz-publish": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "b2b81001f9598f4a6e62878b1e48c356f5039a03c6413ffbbf6deddee48d3ea6"
+    },
+    "wiki": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "1b84ee9e762f69157bd3f8673aefd8b8b8d428df32867bda0ea86d8372d322f8"
+    },
+    "wiki-audit": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "f331392b4121e5ec5a81278ff9c992880ab66ac220461c65e672eaf546e8ffe7"
+    },
+    "wiki-core": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "4f653c448bbfc14ed7e21c8115789d290a1ba7b3a3ffa56a7cbf1afbd03c92a6"
+    },
+    "wiki-inline-link-audit": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "6f5258e7248ef00b2c4ab00a219d28247efdd195172098cf2a381450e132c077"
+    },
+    "wiki-inline-linking": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "d1025503a3444b162f0194ac59a8ed22d0ae42f13c5fc1b00c361d90528ff652"
+    },
+    "wiki-link-audit": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "35c8ccd4b483c5af99159d317b4dda59dcce923b2a0bcd5cfbac0673f0c81138"
+    },
+    "wiki-quartz-publish": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "8dd3a69eec6acf5e9a534501c42fe71d4a2270542e8375cedf74ebeaa730342d"
+    },
+    "wiki-slug-rename": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "94587b4cb5bc5cf2ad47ef7dc2134385ce8478d19eb8b326f759b335957834f3"
+    },
+    "wiki-source-document-ingest": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "da057e6f5ece9e61876979fa6003986100759354b1c59585a7f45b7f832f7e88"
+    },
+    "wiki-source-integration": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "80feded0e883623075f2f06c653024ca31ce34aa55579ba7c852545f4995c957"
+    },
+    "wiki-sources-integrity": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "e1dfa60b565e191b1f731d109ad4fb7e850b128a4c443d58bf5a5438adba107a"
+    },
+    "wiki-vcf-import": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "1bb54237972b54b130f6151e55d0325970547b409fa8e860fb925233edd11f6a"
+    },
+    "youtube-content-ops": {
+      "source": "thedavidweng/skills",
+      "sourceType": "github",
+      "computedHash": "73c4fe86e67755acc73dcce4d36b0ef816edd931e595036e0080c242cc8e2d18"
+    }
+  }
+}

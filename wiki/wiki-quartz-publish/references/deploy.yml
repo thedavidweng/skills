@@ -1,0 +1,82 @@
+name: Deploy Quartz Site
+
+on:
+  repository_dispatch:
+    types:
+      - content-updated
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: wiki-site-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout site repository
+        uses: actions/checkout@v4
+
+      - name: Resolve content ref
+        id: content
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "repo=${{ github.event.client_payload.content_repo }}" >> "$GITHUB_OUTPUT"
+            echo "sha=${{ github.event.client_payload.content_sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "repo=YOUR_USERNAME/content-repo" >> "$GITHUB_OUTPUT"
+            echo "sha=main" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout content repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.content.outputs.repo }}
+          ref: ${{ steps.content.outputs.sha }}
+          token: ${{ secrets.CONTENT_REPO_READ_TOKEN }}
+          path: external/content
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run sync tests
+        run: node --test scripts/sync-content.test.mjs
+
+      - name: Sync content
+        run: node scripts/sync-content.mjs --source external/content --target content
+
+      - name: Build Quartz
+        env:
+          QUARTZ_BASE_URL: ${{ vars.QUARTZ_BASE_URL }}
+        run: npx quartz build
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          npx wrangler pages deploy public \
+            --project-name "${CLOUDFLARE_PAGES_PROJECT:-your-wiki}"
+
+      - name: Write summary
+        run: |
+          {
+            echo "## Quartz deployment"
+            echo ""
+            echo "- content_repo: ${{ steps.content.outputs.repo }}"
+            echo "- content_sha: ${{ steps.content.outputs.sha }}"
+            echo "- pages_project: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}"
+          } >> "$GITHUB_STEP_SUMMARY"

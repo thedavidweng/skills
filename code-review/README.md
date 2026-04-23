@@ -1,0 +1,1 @@
+# Code Review Skills\n\nSkills for code quality, refactoring, and repository maintenance.\n\n| Skill | Description |\n|-------|-------------|\n| [entropy-reduction](entropy-reduction/SKILL.md) | USE THIS SKILL whenever the user wants to: refactor a codebase, clean up tech debt, improve code consistency, reduce com... |\n
