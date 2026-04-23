@@ -199,6 +199,8 @@ print(f'Total description chars: {total}')
 
 ```bash
 rm -rf .agents/skills/
+# Add to .gitignore to prevent future accidental commits
+echo -e ".agents/\n.claude/\n.codebuddy/\n.kiro/\n.trae/\n" >> .gitignore
 # Reinstall cleanly from remote
 npx skills add thedavidweng/skills --full-depth --all -y
 ```
@@ -224,6 +226,103 @@ for root, _, files in os.walk('.'):
 ```
 
 **Fix:** Compress the description to under 200 characters. Move detailed trigger conditions into the SKILL.md body, not the frontmatter.
+
+---
+
+## PII Audit for Existing Repositories
+
+When inheriting or reviewing a skills repo, audit for accidentally committed personal information before publishing or sharing.
+
+### Scan patterns
+
+Search for common PII categories:
+
+```bash
+grep -rn -E '(翁|献|琼|静雯|杨杨|冠豪|Jianshuang|Lanfei|Hui-Fen|Menglin|david-weng|weng-jia|绣山|CSW|UBC|150,000|youtube\.token|YUTU_CACHE|~/yout)' wiki/ code-review/ skill-repo-maintenance/ youtube-content-ops/
+```
+
+Typical categories to check:
+- Real names in examples (e.g., `zhang-san-income-cert.md`)
+- Institution abbreviations used as concrete examples
+- Token file paths or API key patterns
+- Specific monetary amounts
+- Personal file paths (e.g., `~/youtube.token.personal.json`)
+
+### Replace systematically
+
+Use a scripted replacement map to ensure consistency:
+
+```python
+replacements = {
+    'real-name-slug': 'zhang-san',
+    'Real Name': 'Zhang San',
+    'institution-abbrev': 'some-school',
+    '~/personal.path.json': '~/token.json',
+}
+```
+
+Then verify with the same grep pattern — it should return zero hits.
+
+### Rewrite git history after PII cleanup
+
+If PII existed in previous commits, deleting it from current files is not enough. The old commits still contain the data.
+
+**Create an orphan branch and force push:**
+
+```bash
+# Stage all cleaned files
+git add -A
+git commit -m "clean: remove PII, fix structure, add compliance files"
+
+# Create orphan branch to sever history
+git checkout --orphan new_main
+git add -A
+git commit -m "Initial commit: cleaned skills repository"
+
+# Replace main
+git branch -D main
+git branch -m main
+git push --force origin main
+```
+
+**Caution:** This permanently erases all prior commit history. Ensure the cleaned tree is complete before forcing.
+
+---
+
+## Agent Skills Format Compliance Checklist
+
+Before claiming a repo is spec-compliant, verify every skill directory:
+
+| Check | Rule | How to verify |
+|-------|------|---------------|
+| No README.md in skill dir | "Do NOT create extraneous documentation" | `find . -maxdepth 2 -name 'README.md'` should only return root/category docs |
+| Frontmatter has only `name` + `description` | "Do not include any other fields" | `grep -E '^[a-z-]+:' SKILL.md` in frontmatter block |
+| `agents/openai.yaml` exists | Recommended by spec for UI metadata | `ls agents/openai.yaml` in each skill dir |
+| Description < 250 chars | Prevents context budget overflow | `python3 -c "import re; ... print(len(desc))"` |
+| SKILL.md < 500 lines | Official recommendation | `wc -l SKILL.md` |
+| Folder name == `name:` field | Required for CLI matching | `basename $(dirname SKILL.md)` vs frontmatter |
+| No duplicate skill copies | Causes 2% context budget warning | `find . -name 'SKILL.md' | sort` should show each skill once |
+
+---
+
+## SKILL.md Compression
+
+When a SKILL.md exceeds 500 lines, compress without losing functionality:
+
+1. **Move code examples to `references/`**
+   - Long YAML config blocks → `references/config-example.yaml`
+   - Detailed CLI command lists → `references/commands.md`
+   - In SKILL.md, replace with a one-line reference: `*(See references/config-example.yaml)*`
+
+2. **Remove redundant explanations**
+   - If a concept is explained twice, keep the more precise version
+   - Remove "In other words..." restatements
+
+3. **Collapse multi-step sections into bullet lists**
+   - 5 paragraphs describing a phase → 5 bullet points with the key actions
+
+4. **Remove stale example artifacts**
+   - Old placeholder names, outdated path examples, deprecated commands
 
 ---
 
