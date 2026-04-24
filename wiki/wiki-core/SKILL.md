@@ -64,6 +64,20 @@ vault/
 
 ---
 
+## Session Orientation
+
+Before touching any wiki file in a new session, orient yourself:
+
+1. Read `system/wiki/schema.md` — understand current conventions and tag taxonomy.
+2. Read `system/wiki/index.md` — learn what pages exist and their summaries.
+3. Scan the last 20-30 entries of `system/wiki/log.md` — understand recent activity.
+
+Only after orientation should you ingest, absorb, query, or lint. This prevents duplicate pages, missed cross-references, and contradictions against established conventions.
+
+For large wikis (100+ pages), also `search_files` for the topic at hand before creating anything new.
+
+---
+
 ## Source Notes (`sources/`)
 
 Raw evidence. The agent reads but never rewrites after initial import.
@@ -78,6 +92,7 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 source_type: obsidian-daily | apple-notes | notion | web-clip | ocr | manual | export
 source_uri: ""  # original path or URL if known
+sha256: <hex digest of body below frontmatter>  # detects drift on re-ingest
 tags: []
 ---
 ```
@@ -93,6 +108,7 @@ tags: []
 - Never modify a source file after import.
 - If a source needs correction, add a note at the bottom under `## Agent Notes` instead of editing.
 - **Never link to `inbox/` from `## Sources`.** Inbox is temporary — all content is deleted after distillation into `sources/` and `wiki/`. Sources must reference `sources/` paths only.
+- **Re-ingest protection:** On re-ingest of the same `source_uri`, recompute the sha256 over the body. Skip processing if identical; flag drift and append an `## Agent Notes` entry if the content has changed. This catches silent edits in exported data.
 
 ---
 
@@ -103,15 +119,7 @@ Convert source data into source notes under `sources/`. Write a Python script `i
 ### Supported Data Formats
 
 Auto-detect and extract: date, title, body, tags, media. Common formats:
-- **Day One JSON**: `entries` array → date, location, weather, text, media
-- **Apple Notes**: `.html/.txt/.md` → title, date, folder, body
-- **Obsidian Vault**: `.md` → preserve frontmatter, convert `[[wikilinks]]` to plain text
-- **Notion Export**: `.md/.csv` → title, properties, body, flatten nested pages
-- **Chat Exports**: group by conversation+date, extract participants
-- **CSV/Spreadsheet**: each row → entry, auto-detect date/content columns
-- **Email Export**: `.mbox`/`.eml` → date, from, to, subject, body (strip signatures)
-- **VCF Contacts**: name, phone, email, address, birthday, org, notes
-- **Twitter/X Archive**: date, text, media URLs, reply context
+Day One JSON, Apple Notes, Obsidian Vault, Notion Export, Chat Exports, CSV/Spreadsheet, Email Export, VCF Contacts, Twitter/X Archive.
 
 *(See `references/data-formats.md` for detailed extraction rules)*
 ### Unknown Formats
@@ -140,7 +148,9 @@ For each entry:
 5. **Connect to patterns.** Themes across entries deserve concept articles.
 ### What Becomes an Article
 
-**Named things get pages** if there's enough material. A person mentioned once in passing doesn't need a stub. A person who appears across multiple entries with a distinct role does. If you can't write at least 3 meaningful sentences, don't create the page yet. Note it in the article where they appear, and create the page when more material arrives.
+**Named things get pages** if there's enough material. A person mentioned once in passing doesn't need a stub. A person who appears across **2 or more sources** with a distinct role does. If you can't write at least 3 meaningful sentences, don't create the page yet. Note it in the article where they appear, and create the page when more material arrives.
+
+Single-source mentions that are central to that source (e.g., a whole meeting about one project) may also qualify. Passing footnotes do not.
 
 **Patterns and themes get pages.** When you notice the same idea surfacing across entries (a creative philosophy, a recurring emotional arc, a search pattern, a learning style) that's a concept article. These are often the most valuable articles in the wiki.
 
@@ -153,6 +163,17 @@ If you're adding a third paragraph about a sub-topic to an existing article, tha
 ### Anti-Thinning
 
 Creating a page is not the win. Enriching it is. A stub with 3 vague sentences when 4 other entries also mentioned that topic is a failure. Every time you touch a page, it should get richer.
+
+### Update Policy
+
+When new information conflicts with existing content:
+
+1. **Check dates** — newer sources generally supersede older ones, but do not blindly overwrite.
+2. **Note both positions** with their dates and source references in the article body.
+3. **Mark the contradiction** in frontmatter: set `contested: true` and add the conflicting page/article slug to `contradictions: []`.
+4. **Flag for review** — surface contested pages in the next lint report so the human can resolve.
+
+Never silently overwrite. Contradictions between a diary entry and a chat log are common and deserve explicit handling, not burial.
 
 ### Every 15 Entries: Checkpoint
 
@@ -176,6 +197,9 @@ updated: YYYY-MM-DD
 aliases: []
 tags: []
 status: draft | active
+confidence: high | medium | low        # optional. high = multi-source verified; medium = single source or inferred; low = hearsay
+contested: false                       # set true when sources contradict
+contradictions: []                     # slugs of conflicting pages
 ---
 ```
 
@@ -258,6 +282,16 @@ Content with [[wikilinks]] inline.
 
 Section titles are thematic (e.g., "Early Life", "Career", "Philosophy"). Never use event dates as section titles.
 
+### Provenance Markers
+
+When a page synthesizes **3 or more sources**, append paragraph-level provenance so claims remain traceable without re-reading entire raw files:
+
+```markdown
+张三于 2021 年移居温哥华。^[sources/journal/2021-07-21_landing.md]
+```
+
+Use `^[[sources/path.md]]` at the end of a paragraph whose claims come from a specific source. Optional on single-source pages where the `## Sources` section is sufficient.
+
 ### Sources Section
 
 Every wiki page must end with a `## Sources` section listing `[[wikilinks]]` to source files. Omit if the page is self-contained.
@@ -311,64 +345,42 @@ Answer questions about the subject's life by navigating the wiki.
 
 ## Command: `/wiki cleanup`
 
-Audit and enrich every article in the wiki using parallel subagents.
-
-### Phase 1: Build Context
-
-Read `system/wiki/index.md`, `maps/`, and sample 10 source notes. Identify: broken links, orphan pages, missing sources, index drift, naming inconsistencies.
-### Phase 2: Per-Article Subagents
-
-For each article that needs work, spawn a subagent with full context (article + linked sources + related pages). Subagent tasks:
-- Rewrite weak sections
-- Add missing links and sources
-- Split oversized articles
-- Merge duplicate pages
-- Create new pages for themes that emerged
-
-### Phase 3: Integration
-
-After subagents finish, verify: all links resolve, index is accurate, no duplicate pages, maps cover all active articles.
+Audit and enrich articles via parallel subagents. See `references/cleanup-breakdown.md` for full phase-by-phase workflow.
 
 ## Command: `/wiki breakdown`
 
-Find and create missing articles. Expands the wiki by identifying concrete entities and themes that deserve their own pages.
-
-### Phase 1: Survey
-
-Read `system/wiki/index.md` and all `maps/` pages. Understand current coverage. Identify gaps: what topics are missing? What articles are stubs? What relationships are unmapped?
-### Phase 2: Mining
-
-Read source notes in the scope. For each entry, extract:
-- Named entities (people, places, projects, organizations)
-- Themes and patterns (recurring ideas, emotional arcs, decisions)
-- Temporal markers (dates, sequences, phases)
-- Relationships (who introduced whom, collaborations, conflicts)
-- Source quality (verified vs. inferred vs. hearsay)
-
-Build a running list: entities, themes, and source references.
-### Phase 3: Planning
-
-For each theme: what articles exist? What should exist? What merges/splits? Plan article structure before writing.
-### Phase 4: Creation
-
-Write new articles and update existing ones. Every article should connect to at least 3 others. Every claim should cite a source.
-### Reclassification
-
-After creation, audit page types. A person page that became mostly about a project may need splitting. A concept that grew into a full project needs reclassification.
+Find and create missing articles by mining sources for unmapped entities and themes. See `references/cleanup-breakdown.md` for full workflow.
 ## Command: `/wiki lint`
 
 Periodic maintenance. Check:
-- Orphan pages (no inbound links) → create `maps/` indexes or add links
+
+**Broken / Orphan**
 - Broken wikilinks → fix or create targets
+- Orphan pages (zero inbound links) → create `maps/` indexes or add links
+- Backlink imbalance → pages that link out but receive no links back
+
+**Completeness**
 - Missing sources → add `## Sources` sections
-- Index drift → rebuild `system/wiki/index.md`
-- Frontmatter issues → standardize `layer`, `kind`, `status`
+- Index drift → rebuild `system/wiki/index.md`; verify every active page is listed
+- Map coverage → every active page reachable from at least one `maps/` page or index
+
+**Quality Signals**
+- Frontmatter issues → standardize `layer`, `kind`, `status`; validate `confidence`/`contested` fields present on opinion-heavy pages
 - Naming drift → standardize slugs and aliases
+- Tag audit → flag tags not in taxonomy; report unfamiliar tags before deleting
+
+**Freshness & Drift**
+- Stale content → pages whose `updated` date is >90 days older than the newest source mentioning the same entity
+- Source drift → recompute sha256 for each source file; mismatches indicate raw was edited (should not happen) or URL content changed
+- Page size → flag pages approaching or exceeding 150 lines; candidates for splitting per Anti-Cramming rule
+
+**Log Hygiene**
+- Log rotation → if `system/wiki/log.md` exceeds 500 entries, rename to `log-YYYY.md` and start fresh
 
 ## Maintenance Commands
 
 - `/wiki lint` — Periodic audit: orphans, broken links, missing sources, index drift, frontmatter/naming issues.
-- `/wiki rebuild-index` — Rebuild `system/wiki/index.md` and update backlinks.
+- `/wiki rebuild-index` — Rebuild `system/wiki/index.md` and update backlinks. **Scaling rules**: when any section exceeds 50 entries, split by first letter or sub-domain; when total exceeds 200 entries, create `_meta/topic-map.md` for theme-based navigation.
 - `/wiki status` — Show stats: entries absorbed, articles by category, most-connected articles, orphans, pending entries.
 
 ---
@@ -413,55 +425,13 @@ Broad domains relevant to the wiki owner: e.g., `ai` | `media` | `startup` | `wr
 
 ### Tags to Remove or Merge
 
-- Tech stack tags (`tauri`, `rust`, `nextjs`) — belong in article body
-- Redundant name tags — page title already identifies the entity
-- One-off tags — not useful for filtering
-
-**Audit rule**: Tags not in taxonomy can be removed, but must ask the user first — never auto-delete. Report unfamiliar tags and wait for confirmation.
+Tech stack tags belong in body text, not tags. Redundant name tags and one-off tags should be removed. Audit rule: report unfamiliar tags before deleting — never auto-delete.
 
 ---
 
 ## Writing Standards
 
-### The Golden Rule
-
-**This is not Wikipedia about the thing. This is about the thing's role in the subject's life.**
-
-A page about a book isn't a book review. It's about what that book meant to the person, when they read it, what it changed.
-
-### Tone: Wikipedia, Not AI
-
-Flat, factual, encyclopedic. State what happened. Direct quotes carry emotional weight; the article stays neutral.
-
-**Never use:** em dashes, peacock words ("legendary", "visionary"), editorial voice ("interestingly"), rhetorical questions, progressive narrative ("would go on to"), qualifiers ("genuine", "profound").
-
-**Do:** lead with subject, one claim per sentence, simple past/present tense, attribution over assertion ("He described it as energizing"), dates over adjectives.
-### Narrative Coherence
-
-Every article must have a point. Not "here are 4 times X appeared" but "X represented Y in the subject's life." A reader should finish feeling they understand the significance.
-
-### Structure by Type
-
-- **Person**: lead with identity and role, then relationships, then narrative by life phase. Use timeline for chronology.
-- **Project**: problem → approach → execution → outcome → lessons. What changed because of this?
-- **Place**: what happened here, not what it is. The place is a container for events and relationships.
-- **Concept**: origin → development → current form → connections to other concepts. Where did this idea come from?
-- **Topic**: external subject. Treat like a mini-Wikipedia article but with personal relevance.
-- **Period**: major life phase. Organize by theme, not chronology.
-### Quote Discipline
-
-Maximum 2 direct quotes per article. Pick the line that hits hardest.
-
-### Length Targets
-
-| Page Type | Target | Minimum |
-|-----------|--------|---------|
-| Person / Project / Place / Period | 300-500 words | 150 words |
-| Concept / Topic | 200-400 words | 100 words |
-| Map page | 100-200 words | 50 words |
-| Source note | No target | As needed |
-
-Use judgment: sparse data → short page; major project → long page.
+Load `references/writing-standards.md` before creating or rewriting articles. Core rule: **Wikipedia tone, not AI tone.** Flat, factual, encyclopedic. Every article must have a point. Theme-based sections, not chronological dumps. Max 2 direct quotes.
 ## Schema Persistence
 
 Conventions discovered during wiki work MUST be written into `system/wiki/schema.md` and `system/wiki/workflows.md`. Other agents and future sessions won't know about session-only decisions. If you discover a new convention (e.g., "no `## Related` sections"), immediately add it to schema.md. Otherwise the next agent will reintroduce the pattern you just removed.
