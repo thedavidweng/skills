@@ -436,6 +436,10 @@ Load `references/writing-standards.md` before creating or rewriting articles. Co
 
 Conventions discovered during wiki work MUST be written into `system/wiki/schema.md` and `system/wiki/workflows.md`. Other agents and future sessions won't know about session-only decisions. If you discover a new convention (e.g., "no `## Related` sections"), immediately add it to schema.md. Otherwise the next agent will reintroduce the pattern you just removed.
 
+## Pitfalls
+
+Load `references/pitfalls.md` before debugging broken links, index drift, or unexpected orphans.
+
 ---
 
 ## Principles
