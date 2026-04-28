@@ -66,13 +66,23 @@ Generate channel-consistent metadata for uploaded videos.
 |-------|-------------|
 | **[youtube-content-ops](youtube-content-ops/)** | Generate titles, descriptions, and tags that match your channel's brand style. |
 
+### Document Generation
+
+Text-as-source document workflows. Manage source files, not PDFs — generate on demand.
+
+| Skill | Description |
+|-------|-------------|
+| **[cover-letter](document-generation/cover-letter/)** | Professional cover letters via Typst. Calibrated template with precise typography — one command to PDF. |
+| **[json-resume](document-generation/json-resume/)** | Structured resumes via JSON Resume standard. Data/style separation, themed rendering, auto-publish to registry. |
+| **[cli-invoice](document-generation/cli-invoice/)** | CLI-based invoices via maaslalani/invoice. The command is the source file — store in notes, regenerate anytime. |
+
 ### Code Quality
 
 Systematic codebase maintenance for AI-first and vibe-coding teams.
 
 | Skill | Description |
 |-------|-------------|
-|| **[entropy-reduction](code-review/entropy-reduction/)** | Identify and fix structural, semantic, behavioral, and evolutionary disorder through safe, incremental refactoring. |
+| **[entropy-reduction](code-review/entropy-reduction/)** | Identify and fix structural, semantic, behavioral, and evolutionary disorder through safe, incremental refactoring. |
 
 ---
 
@@ -85,6 +95,9 @@ Once installed, prompt your agent naturally:
 "Audit my wiki for broken links and orphan pages"
 "Write a YouTube description for this video"
 "Refactor this codebase to reduce tech debt"
+"Write a cover letter for this job posting"
+"Render my resume as PDF"
+"Generate an invoice for last month's work"
 ```
 
 Each skill auto-detects the appropriate workflow, fetches context from your data or codebase, and produces results. Agent Skills follow the standard format: each skill directory contains a `SKILL.md` with the full workflow spec, and optional `references/` with templates, cheatsheets, and examples.

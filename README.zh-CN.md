@@ -66,6 +66,16 @@ npx skills add thedavidweng/skills --full-depth
 |------|------|
 | **[youtube-content-ops](youtube-content-ops/)** | 生成匹配频道品牌风格的标题、描述和标签。 |
 
+### 文档生成
+
+以文本为源的文档工作流。管理源文件而非 PDF——按需生成。
+
+| 技能 | 说明 |
+|------|------|
+| **[cover-letter](document-generation/cover-letter/)** | 基于 Typst 生成专业求职信。校准过的模板，精确排版——一条命令出 PDF。 |
+| **[json-resume](document-generation/json-resume/)** | 基于 JSON Resume 标准管理简历。数据/样式分离，主题渲染，自动发布到 Registry。 |
+| **[cli-invoice](document-generation/cli-invoice/)** | 基于 maaslalani/invoice CLI 生成发票。命令本身就是源文件——存在笔记里，随时重新生成。 |
+
 ### 代码质量
 
 面向 AI 优先和 vibe coding 团队的系统化代码库维护。
@@ -85,6 +95,9 @@ npx skills add thedavidweng/skills --full-depth
 "审计我的 Wiki，检查断链和孤立页面"
 "为这条视频写一段 YouTube 描述"
 "重构这段代码，减少技术债务"
+"帮我写一封求职信"
+"把我的简历渲染成 PDF"
+"生成上个月的发票"
 ```
 
 每个技能会自动检测合适的工作流，从你的数据或代码库中获取上下文，并输出结果。Agent Skills 遵循标准格式：每个技能目录包含一个记录完整工作流规范的 `SKILL.md`，以及可选的 `references/` 目录存放模板、速查表和示例。

@@ -1,0 +1,2 @@
+name: json-resume
+description: Manage resumes using the JSON Resume open standard with the resumed CLI. Use when the user needs to create, edit, render, or export a resume. Supports themed rendering, job-specific variants, and auto-publishing to the JSON Resume Registry.
