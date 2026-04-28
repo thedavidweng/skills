@@ -12,8 +12,8 @@ metadata:
 > Tools:
 > - [JSON Resume](https://jsonresume.org/) — Open standard for resume data
 > - [resumed](https://github.com/rbardini/resumed) (v6.1.0) — Lightweight JSON Resume CLI builder
-> - [jsonresume-theme-consultant-polished](https://www.npmjs.com/package/@jsonresume/jsonresume-theme-consultant-polished) (v1.0.1) — Theme
 > - [puppeteer](https://pptr.dev/) — Required for PDF export only
+> - Theme: user's choice — browse at https://jsonresume.org/themes
 
 ## Philosophy
 
@@ -38,13 +38,13 @@ cd <resume-directory>
 npm install
 ```
 
-This installs from `package.json`:
+This installs from `package.json`. Example:
 
 ```json
 {
   "dependencies": {
     "resumed": "^6.1.0",
-    "@jsonresume/jsonresume-theme-consultant-polished": "^1.0.1",
+    "jsonresume-theme-even": "^0.20.0",
     "puppeteer": "^24.42.0"
   }
 }
@@ -53,7 +53,7 @@ This installs from `package.json`:
 | Package | Purpose | Required for |
 |---------|---------|-------------|
 | `resumed` | CLI: render, export, validate, init | All operations |
-| `@jsonresume/jsonresume-theme-consultant-polished` | Visual theme | render & export |
+| `jsonresume-theme-*` | Visual theme (**user's choice**) | render & export |
 | `puppeteer` | Headless Chrome for PDF generation | export (PDF) only |
 
 ### 3. Verify installation
@@ -62,10 +62,29 @@ This installs from `package.json`:
 npx resumed --help
 ```
 
-### Browse themes
+### Choose a theme — ASK THE USER
 
-Resumed does NOT bundle any theme. You must install one. Browse all available themes:
-https://www.npmjs.com/search?q=jsonresume-theme
+Resumed does **NOT** bundle any theme. The user must pick and install one.
+
+**Browse themes:** https://jsonresume.org/themes
+
+Install the chosen theme as a dependency:
+
+```bash
+npm install jsonresume-theme-even  # example — replace with user's choice
+```
+
+Or specify the theme in `resume.json` via the `.meta.theme` field:
+
+```json
+{
+  "meta": {
+    "theme": "jsonresume-theme-even"
+  }
+}
+```
+
+When no `.meta.theme` is set, the `-t` flag is required on every render/export command.
 
 ## Project Structure
 
@@ -136,15 +155,21 @@ All commands use `npx resumed` (runs the locally-installed version).
 
 ```bash
 npx resumed render "resume.json" \
-  -t @jsonresume/jsonresume-theme-consultant-polished \
+  -t <theme-package-name> \
   -o out.html
+```
+
+If `.meta.theme` is set in the JSON file, `-t` can be omitted:
+
+```bash
+npx resumed render "resume.json" -o out.html
 ```
 
 ### Export to PDF
 
 ```bash
 npx resumed export "resume.json" \
-  -t @jsonresume/jsonresume-theme-consultant-polished \
+  -t <theme-package-name> \
   -o resume.pdf
 ```
 
@@ -219,7 +244,7 @@ Examples:
 ## Common Mistakes to Avoid
 
 1. **Do NOT edit the generic resume to target a specific job** — copy it first
-2. **Do NOT change the theme in render commands without testing** — themes have different layouts
+2. **Do NOT switch themes without testing** — themes have different layouts and may break pagination
 3. **Do NOT persist PDF files** — generate on demand
 4. **Do NOT push targeted versions to the registry** — only `resume.json` should be public
 5. **Do NOT use relative dates** ("3 years ago") — use absolute `YYYY-MM-DD`
