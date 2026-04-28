@@ -124,6 +124,12 @@ Category directories (e.g. `wiki/`, `code-review/`) contain a `README.md` summar
 
 ---
 
+## My Third-Party Skills
+
+Curated list of third-party agent skills I use alongside this repo → **[THIRD-PARTY-SKILLS.md](./THIRD-PARTY-SKILLS.md)**
+
+---
+
 ## Contributing
 
 Personal collection, but bug reports and improvements welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
