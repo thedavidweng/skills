@@ -2,7 +2,9 @@ name: Mirror to Codeberg
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
+      - "!dependabot/**"
     tags: ["**"]
   workflow_dispatch:
 
