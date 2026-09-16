@@ -33,15 +33,11 @@ npx skills add thedavidweng/skills --all
 | 技能 | 说明 |
 |------|------|
 | **[wiki-core](wiki/wiki-core/)** | 构建 Wiki。摄取原始数据、吸收成文章、查询、清理。其他所有技能的基础。 |
-| **[wiki-inline-linking](wiki/wiki-inline-linking/)** | 添加维基百科风格的行内双链。不再需要 `## Related` 区块。 |
-| **[wiki-inline-link-audit](wiki/wiki-inline-link-audit/)** | 自动发现并修复全库中未链接的提及。 |
+| **[wiki-linking](wiki/wiki-linking/)** | 添加行内双链、扫描未链接提及、验证反向链接。不再需要 `## Related` 区块。 |
 | **[wiki-slug-rename](wiki/wiki-slug-rename/)** | 重命名页面 slug，同时保持全库链接有效。 |
-| **[wiki-sources-integrity](wiki/wiki-sources-integrity/)** | 在批量清理时保护 `## Sources` 区块，防止丢失身份文档链接。 |
-| **[wiki-source-integration](wiki/wiki-source-integration/)** | 决定文档是内联嵌入还是存储在 `sources/` 中。 |
-| **[wiki-source-document-ingest](wiki/wiki-source-document-ingest/)** | 将证书、合同、公函等文档摄入 sources 和 wiki 页面。 |
+| **[wiki-sources](wiki/wiki-sources/)** | Source 层：内联还是存文件、摄入证书合同、保护 `## Sources` 区块。 |
 | **[wiki-vcf-import](wiki/wiki-vcf-import/)** | 将 VCF 联系人导入 `wiki/people/` 页面。处理中文姓名反转和号码脱敏。 |
 | **[wiki-audit](wiki/wiki-audit/)** | 全库审计：孤立页面、断链、重复页面、草稿、标签合规、内容健康度。 |
-| **[wiki-link-audit](wiki/wiki-link-audit/)** | 验证反向链接合法性。捕获虚假链接和同名冲突。 |
 | **[wiki-quartz-publish](wiki/wiki-quartz-publish/)** | 将 Wiki 发布为私有 Quartz 站点。强烈建议使用 Cloudflare Access / Zero Trust。 |
 
 ### Content Operations
