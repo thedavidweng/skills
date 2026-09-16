@@ -14,14 +14,10 @@
     "./writing/david-weng-writing-style",
     "./wiki/wiki-audit",
     "./wiki/wiki-core",
-    "./wiki/wiki-inline-link-audit",
-    "./wiki/wiki-inline-linking",
-    "./wiki/wiki-link-audit",
     "./wiki/wiki-quartz-publish",
     "./wiki/wiki-slug-rename",
-    "./wiki/wiki-source-document-ingest",
-    "./wiki/wiki-source-integration",
-    "./wiki/wiki-sources-integrity",
-    "./wiki/wiki-vcf-import"
+    "./wiki/wiki-vcf-import",
+    "./wiki/wiki-linking",
+    "./wiki/wiki-sources"
   ]
 }

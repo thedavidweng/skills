@@ -33,15 +33,11 @@ Build and maintain a compounding knowledge base from your notes, messages, and d
 | Skill | Description |
 |-------|-------------|
 | **[wiki-core](wiki/wiki-core/)** | Build the wiki. Ingest raw data, absorb into articles, query, clean up. The foundation everything else assumes. |
-| **[wiki-inline-linking](wiki/wiki-inline-linking/)** | Add Wikipedia-style inline wikilinks. No more `## Related` sections. |
-| **[wiki-inline-link-audit](wiki/wiki-inline-link-audit/)** | Automatically find and fix unlinked mentions across the vault. |
+| **[wiki-linking](wiki/wiki-linking/)** | Add Wikipedia-style inline wikilinks, scan for unlinked mentions, verify backlinks. No more `## Related` sections. |
 | **[wiki-slug-rename](wiki/wiki-slug-rename/)** | Rename page slugs without breaking links across the vault. |
-| **[wiki-sources-integrity](wiki/wiki-sources-integrity/)** | Protect `## Sources` sections during batch cleanup. Never lose identity document links. |
-| **[wiki-source-integration](wiki/wiki-source-integration/)** | Decide whether to embed documents inline or store them in `sources/`. |
-| **[wiki-source-document-ingest](wiki/wiki-source-document-ingest/)** | Ingest certificates, contracts, and official documents into sources and wiki pages. |
+| **[wiki-sources](wiki/wiki-sources/)** | Source layer: inline vs file, ingest certificates/contracts, protect `## Sources` sections. |
 | **[wiki-vcf-import](wiki/wiki-vcf-import/)** | Import VCF contacts into `wiki/people/` pages. Handles Chinese name reversal and phone masking. |
 | **[wiki-audit](wiki/wiki-audit/)** | Full vault audit: orphans, broken links, duplicates, stubs, tag compliance, content hygiene. |
-| **[wiki-link-audit](wiki/wiki-link-audit/)** | Verify backlink legitimacy. Catch false links and same-name collisions. |
 | **[wiki-quartz-publish](wiki/wiki-quartz-publish/)** | Publish your wiki as a private Quartz site. Strongly recommends Cloudflare Access / Zero Trust. |
 
 ### Content Operations
