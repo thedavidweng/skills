@@ -1,6 +1,9 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
     groups:
       github-actions:
         patterns:
@@ -8,9 +11,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-    directory: /
-    schedule:
-      interval: weekly
     cooldown:
       default-days: 5
       semver-major-days: 7
