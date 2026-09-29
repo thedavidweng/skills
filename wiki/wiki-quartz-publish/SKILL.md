@@ -1,11 +1,13 @@
 ---
 name: wiki-quartz-publish
-description: 'Publish a wiki as a private Quartz site. Triggers on ''publish wiki'', ''deploy site'', ''Quartz'', or ''Cloudflare Pages''.'
+description: 'Publish a wiki as a private Quartz site. Triggers on ''publish wiki'', ''deploy site'', ''Quartz'', or ''Cloudflare Workers''.'
 ---
 
 **Privacy first.** Before anything: explain the exposure risks in plain language, offer Cloudflare Access (recommended) / Zero Trust / IP allowlist / password, and get explicit confirmation. Never skip.
 
-**Setup:** content repo (private vault, dispatches on `wiki/**` pushes) → site repo (Quartz fork, `sync-content.mjs` → `quartz build` → `wrangler pages deploy`). Full workflows: `references/deploy.yml`.
+**Setup:** content repo (private vault, dispatches on `wiki/**` pushes) → site repo (Quartz fork, `sync-content.mjs` → `quartz build` → `cf deploy` to a static-assets Worker). Full workflows: `references/deploy.yml`.
+
+**Deploy config:** `cf` and `wrangler` are devDependencies (`wrangler` only bundles). `cloudflare.config.ts` uses `defineConfig` from `cf/config` with `worker: { name, compatibilityDate, assets: { htmlHandling: "auto-trailing-slash", notFoundHandling: "404-page" } }`; `wrangler.config.ts` is `defineWranglerConfig({ assetsDirectory: "./public" })` from `wrangler/experimental-config`. Build with `quartz build` (set `QUARTZ_BASE_URL` to the Worker host), then `cf deploy`. Secrets: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, content-repo read token. Put the Access policy on the Worker (incl. `workers.dev`) before the first deploy.
 
 **Sync rules:** copy only `wiki/` (never `sources/`/`inbox/`); inject `title:` from H1 (JSON.stringify it — colons break YAML); strip PII frontmatter; honor `ExplicitPublish` (only `publish: true` builds). Homepage nav generates from `maps/*.md` with `nav: true`.
 

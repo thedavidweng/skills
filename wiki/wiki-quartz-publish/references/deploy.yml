@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout site repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Resolve content ref
         id: content
@@ -35,7 +35,7 @@ jobs:
           fi
 
       - name: Checkout content repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ${{ steps.content.outputs.repo }}
           ref: ${{ steps.content.outputs.sha }}
@@ -43,9 +43,9 @@ jobs:
           path: external/content
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "22"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -62,14 +62,12 @@ jobs:
           QUARTZ_BASE_URL: ${{ vars.QUARTZ_BASE_URL }}
         run: npx quartz build
 
-      - name: Deploy to Cloudflare Pages
+      # cf reads cloudflare.config.ts (worker name, assets); see SKILL.md
+      - name: Deploy to Cloudflare Workers
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN }}
-          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
-        run: |
-          npx wrangler pages deploy public \
-            --project-name "${CLOUDFLARE_PAGES_PROJECT:-your-wiki}"
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx cf deploy
 
       - name: Write summary
         run: |
@@ -78,5 +76,5 @@ jobs:
             echo ""
             echo "- content_repo: ${{ steps.content.outputs.repo }}"
             echo "- content_sha: ${{ steps.content.outputs.sha }}"
-            echo "- pages_project: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}"
+            echo "- worker: your-wiki"
           } >> "$GITHUB_STEP_SUMMARY"
