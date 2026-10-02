@@ -8,6 +8,7 @@
     "./code-review/entropy-reduction",
     "./code-review/go-production-review",
     "./web-dev/aeo-audit",
+    "./homebrew/homebrew-cask-submit",
     "./document-generation/cli-invoice",
     "./document-generation/cover-letter",
     "./document-generation/json-resume",

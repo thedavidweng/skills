@@ -1,0 +1,5 @@
+name: homebrew-cask-submit
+description: >
+  Use when adding or fixing a Homebrew cask, or opening a homebrew-cask pull
+  request, and the download URL, architecture, livecheck, zap paths, or a
+  regional edition are unclear.

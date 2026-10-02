@@ -75,6 +75,14 @@ npx skills add thedavidweng/skills --all
 |------|------|
 | **[aeo-audit](web-dev/aeo-audit/)** | 审计任意网站的 Agent 体验优化——llms.txt、schema.org、语义化 HTML、站点地图及跨信号一致性。 |
 
+### Homebrew
+
+提交 cask 时补上本地 audit 不会跑的检查。
+
+| 技能 | 说明 |
+|------|------|
+| **[homebrew-cask-submit](homebrew/homebrew-cask-submit/)** | 新 cask 或修复里文档没写清的部分：签名地址、首页域名年龄、架构取证、地区版成对提交、livecheck、zap、单 cask 测试 tap、PR 模板机器人。 |
+
 ### 写作
 
 风格引导的内容生成与审查。
@@ -106,27 +114,17 @@ npx skills add thedavidweng/skills --all
 "生成上个月的发票"
 ```
 
-每个技能会自动检测合适的工作流，从你的数据或代码库中获取上下文，并输出结果。Agent Skills 遵循标准格式：每个技能目录包含一个记录完整工作流规范的 `SKILL.md`，以及可选的 `references/` 目录存放模板、速查表和示例。
+每个技能就是一份给 Agent 加载的 `SKILL.md`。只有这份文件不够用时才加其他文件。
 
 ---
 
 ## 目录结构
 
-每个技能遵循标准的 Agent Skills 格式：
-
 ```
-skill-name/
-├── SKILL.md           # Agent 的完整工作流规范
-├── agents/
-│   └── openai.yaml    # UI 元数据
-└── references/        # 模板、速查表、示例
+category/skill-name/SKILL.md    # 必需，给 Agent
 ```
 
-- `SKILL.md` — 命令、决策树、陷阱、发布前检查清单
-- `agents/openai.yaml` — 技能名称与描述，用于 Agent UI 发现
-- `references/` — 品牌指南模板、CLI 命令参考、支持文档
-
-分类目录（例如 `wiki/`、`code-review/`）下的 `README.md` 汇总该分类中的所有技能。
+`references/`、`scripts/`、`agents/openai.yaml` 都是可选的。分类目录可以有一份 `README.md` 列出该组技能。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 仓库根目录还包含 `.claude-plugin/plugin.json`，用于声明 `npx skills add thedavidweng/skills` 默认展示哪些技能。新增、移动或重命名技能时，需要同步更新这个清单。
 

@@ -75,6 +75,14 @@ Audit and optimize websites for AI discoverability and agent experience.
 |-------|-------------|
 | **[aeo-audit](web-dev/aeo-audit/)** | Audit any website for Agent Experience Optimization — llms.txt, schema.org, semantic HTML, sitemap, and cross-signal consistency. |
 
+### Homebrew
+
+Submit casks with the checks local audit does not run.
+
+| Skill | Description |
+|-------|-------------|
+| **[homebrew-cask-submit](homebrew/homebrew-cask-submit/)** | Non-obvious checks for a new or fixed cask: signed URLs, homepage age, arch evidence, regional pairs, livecheck, zap, one-cask taps, and the PR template bot. |
+
 ### Writing
 
 Style-guided content generation and review.
@@ -106,27 +114,17 @@ Once installed, prompt your agent naturally:
 "Generate an invoice for last month's work"
 ```
 
-Each skill auto-detects the appropriate workflow, fetches context from your data or codebase, and produces results. Agent Skills follow the standard format: each skill directory contains a `SKILL.md` with the full workflow spec, and optional `references/` with templates, cheatsheets, and examples.
+Each skill is a `SKILL.md` the agent loads. Extra files exist only when that file is not enough.
 
 ---
 
 ## Structure
 
-Each skill follows the standard Agent Skills format:
-
 ```
-skill-name/
-├── SKILL.md           # Full workflow spec for the agent
-├── agents/
-│   └── openai.yaml    # UI metadata
-└── references/        # Templates, cheatsheets, examples
+category/skill-name/SKILL.md    # required, agent-facing
 ```
 
-- `SKILL.md` — commands, decision trees, pitfalls, pre-publish checklist
-- `agents/openai.yaml` — skill name and description for agent UI discovery
-- `references/` — brand guide templates, CLI command references, supporting docs
-
-Category directories (e.g. `wiki/`, `code-review/`) contain a `README.md` summarizing all skills in that group.
+`references/`, `scripts/`, and `agents/openai.yaml` are optional. Category directories may have a `README.md` listing the skills in that group. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 The repository also includes `.claude-plugin/plugin.json`, which lists the skills that `npx skills add thedavidweng/skills` should show by default. Keep that manifest in sync when adding, moving, or renaming skills.
 

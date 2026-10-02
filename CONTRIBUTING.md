@@ -1,22 +1,21 @@
 # Contributing
 
-Thanks for your interest in improving these skills.
+## Add a skill
 
-## How to Contribute
+Required:
 
-1. **Open an issue** first for bug reports or feature requests
-2. **Fork the repo** and create a feature branch
-3. **Follow the skill format** — each skill needs:
-   - `README.md` — human-friendly overview
-   - `SKILL.md` — agent-facing workflow spec
-   - `references/` — supporting docs
-4. **Test commands** — all yutu/CLI commands must be verified against the actual tool
-5. **Submit a PR** with a clear description of changes
+- `category/skill-name/SKILL.md`
+- YAML `name` matching the directory, and a `description` that says when to load it
+- A row in `README.md` and `README.zh-CN.md`
+- The path in `.claude-plugin/plugin.json`
+- One line in the category `README.md` when that directory has one
 
-## Skill Format Checklist
+`SKILL.md` is for the agent. Write the failure and the action. Leave out anything the upstream docs already say, and anything a competent agent already does. A few sentences per fact.
 
-- [ ] YAML front matter with `name` and `description`
-- [ ] `README.md` with quick start and examples
-- [ ] `SKILL.md` with workflow, commands, pitfalls, and decision logic
-- [ ] Commands tested against real tools (yutu v0.10+, youtube-transcript-api v2+)
-- [ ] No hardcoded personal paths or credentials
+No per-skill `README.md`. Add `references/`, `scripts/`, or `agents/openai.yaml` only when the agent cannot act from `SKILL.md` alone.
+
+## Constraints
+
+- No personal paths, usernames, or credentials
+- Every command in the skill is one you ran
+- Index edits belong with the skill they describe
