@@ -1,2 +1,4 @@
-name: youtube-content-ops
-description: |
+interface:
+  display_name: "YouTube Content Ops"
+  short_description: "On-brand YouTube titles, descriptions, and tags"
+  default_prompt: "Use $youtube-content-ops to draft a title, description, and tags for this video."

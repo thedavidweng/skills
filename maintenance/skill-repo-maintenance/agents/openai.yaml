@@ -1,2 +1,4 @@
-name: skill-repo-maintenance
-description: Maintain and reorganize agent skills within a skills repository. USE THIS SKILL whenever the user wants to: rename skills, reorganize skill folders, fix broken skill installation commands, update skil
+interface:
+  display_name: "Skill Repo Maintenance"
+  short_description: "Rename, move, and validate skills in a repo"
+  default_prompt: "Use $skill-repo-maintenance to check every skill in this repo for format problems."

@@ -1,10 +1,4 @@
-name: stale-docs-cleanup
-description: |
-  Clean up stale documentation and plan debris after agentic coding work.
-  Deletes completed plans, phase docs, handoff notes, archive folders, and
-  docs that duplicate code. Moves future work into the repo's issue tracker.
-  Preserves human-facing guides, ADRs, and frozen interface contracts.
-
-  Triggers on: "clean up docs", "stale docs", "remove plan files",
-  "delete old documentation", "repo doc cleanup", "plan debris",
-  "archive old docs", "documentation hygiene".
+interface:
+  display_name: "Stale Docs Cleanup"
+  short_description: "Remove plan debris and stale docs from a repo"
+  default_prompt: "Use $stale-docs-cleanup to find and clean up stale docs in this repo."

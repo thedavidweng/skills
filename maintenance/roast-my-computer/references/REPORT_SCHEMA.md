@@ -1,5 +1,14 @@
 # Report Schema
 
+## Contents
+
+- Top-level fields
+- Finding shape
+- Scan scope
+- Scan budgets and truncation
+- HTML contract
+- Share card data
+
 `scan_dev_environment.py` writes `schema_version: 1.6.0`.
 
 ## Top-level fields

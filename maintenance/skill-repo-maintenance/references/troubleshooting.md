@@ -12,4 +12,4 @@ Fix: delete the stale copy (usually `.agents/skills/`), add installer dirs (`.ag
 
 ## Root cause B: long descriptions
 
-Keep every description under 200 characters. Move trigger conditions into the SKILL.md body, never the frontmatter. Find offenders by printing each description length and compress the long ones.
+Keep every description under 250 characters. Keep the trigger terms ("Use when ...") in the description, because that is the only text the agent sees when choosing a skill; cut restated detail instead. Front-load the key use case so a truncated description still matches. Find offenders by printing each description length and compress the long ones.

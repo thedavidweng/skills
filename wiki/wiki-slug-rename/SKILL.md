@@ -1,6 +1,6 @@
 ---
 name: wiki-slug-rename
-description: 'Rename wiki page slugs without breaking links. Triggers on ''rename page'', ''change slug'', ''bulk rename'', or ''normalize names''.'
+description: 'Renames wiki page slugs and updates every link, source file, and index entry. Use when asked to rename or normalize wiki page names.'
 ---
 
 1. `mv wiki/{section}/{old}.md wiki/{section}/{new}.md`.

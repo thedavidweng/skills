@@ -1,2 +1,4 @@
-name: wiki-slug-rename
-description: Rename wiki page slugs while maintaining referential integrity across
+interface:
+  display_name: "Wiki Slug Rename"
+  short_description: "Rename wiki pages without breaking links"
+  default_prompt: "Use $wiki-slug-rename to rename this wiki page and update every link."

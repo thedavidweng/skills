@@ -1,11 +1,4 @@
-name: aeo-audit
-description: |
-  Audit any website for Agent Experience Optimization (AEO) — the AI-native equivalent of SEO.
-  Checks llms.txt, agent views, schema.org structured data, sitemap, robots.txt, Open Graph,
-  semantic HTML, visual content labeling, and cross-signal consistency.
-  Skips irrelevant checks (pricing, API, MCP) for static sites based on site classification.
-  Provides explicit fix plans with verification commands.
-
-  Triggers on: "audit AEO", "agent readable", "AI discoverable", "agent experience",
-  "check SEO", "check AEO", "llms.txt audit", "agent view audit", "make site discoverable",
-  "before publish site", "before deploy site".
+interface:
+  display_name: "AEO Audit"
+  short_description: "Audit a website for AI-agent discoverability"
+  default_prompt: "Use $aeo-audit to audit this website for AI-agent discoverability."

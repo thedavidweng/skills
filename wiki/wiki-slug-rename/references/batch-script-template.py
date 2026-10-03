@@ -78,4 +78,4 @@ if os.path.exists(INDEX_PATH):
             f.write(new_content)
         print(f"Updated index: {INDEX_PATH}")
 
-print("\nDone. Run your vault audit to verify zero broken links.")
+print("\nDone. Run the wiki-core lint to verify zero broken links.")

@@ -1,2 +1,4 @@
-name: wiki-sources
-description: Source-layer management for Obsidian wiki vaults. USE THIS SKILL whenever the user wants to store source documents, ingest certificates or contracts, or protect Sources sections during cleanup.
+interface:
+  display_name: "Wiki Sources"
+  short_description: "Store, ingest, and protect wiki source files"
+  default_prompt: "Use $wiki-sources to ingest this document into the wiki sources."

@@ -1,6 +1,6 @@
 # Production Go checklist
 
-This checklist distills production-applicable practices from the uploaded book *Production Go* into audit criteria. Use it as an intent-level standard: accept modern equivalents that satisfy the same reliability, correctness, security, and operability goals.
+This checklist distills production-applicable practices from the book *Production Go* into audit criteria. Use it as an intent-level standard: accept modern equivalents that satisfy the same reliability, correctness, security, and operability goals.
 
 ## Table of contents
 

@@ -37,7 +37,6 @@ npx skills add thedavidweng/skills --all
 | **[wiki-slug-rename](wiki/wiki-slug-rename/)** | 重命名页面 slug，同时保持全库链接有效。 |
 | **[wiki-sources](wiki/wiki-sources/)** | Source 层：内联还是存文件、摄入证书合同、保护 `## Sources` 区块。 |
 | **[wiki-vcf-import](wiki/wiki-vcf-import/)** | 将 VCF 联系人导入 `wiki/people/` 页面。处理中文姓名反转和号码脱敏。 |
-| **[wiki-audit](wiki/wiki-audit/)** | 全库审计：孤立页面、断链、重复页面、草稿、标签合规、内容健康度。 |
 | **[wiki-quartz-publish](wiki/wiki-quartz-publish/)** | 将 Wiki 发布为私有 Quartz 站点。强烈建议使用 Cloudflare Access / Zero Trust。 |
 
 ### Content Operations
@@ -55,16 +54,14 @@ npx skills add thedavidweng/skills --all
 | 技能 | 说明 |
 |------|------|
 | **[cover-letter](document-generation/cover-letter/)** | 基于 Typst 生成专业求职信。校准过的模板，精确排版——一条命令出 PDF。 |
-| **[json-resume](document-generation/json-resume/)** | 基于 JSON Resume 标准管理简历。数据/样式分离，主题渲染，自动发布到 Registry。 |
 | **[cli-invoice](document-generation/cli-invoice/)** | 基于 maaslalani/invoice CLI 生成发票。命令本身就是源文件——存在笔记里，随时重新生成。 |
 
 ### 代码质量
 
-面向 AI 优先和 vibe coding 团队的系统化代码库维护。
+Go 代码库的生产就绪审查。
 
 | 技能 | 说明 |
 |------|------|
-| **[entropy-reduction](code-review/entropy-reduction/)** | 通过安全、渐进式重构，识别并修复结构性、语义性、行为性和演化性代码混乱。 |
 | **[go-production-review](code-review/go-production-review/)** | 审计 Go 代码库的生产就绪性——模块、错误处理、并发、测试、安全、CI/CD、可观测性。 |
 
 ### Web 开发
@@ -108,9 +105,8 @@ npx skills add thedavidweng/skills --all
 "用我的笔记和消息构建一个 Wiki"
 "审计我的 Wiki，检查断链和孤立页面"
 "为这条视频写一段 YouTube 描述"
-"重构这段代码，减少技术债务"
+"审计这个 Go 服务是否达到生产就绪"
 "帮我写一封求职信"
-"把我的简历渲染成 PDF"
 "生成上个月的发票"
 ```
 

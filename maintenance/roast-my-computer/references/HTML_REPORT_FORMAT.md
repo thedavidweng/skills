@@ -1,5 +1,21 @@
 # HTML Report Format
 
+## Contents
+
+- Visual target
+- Scaffold
+- Data mapping
+- Language
+- Header
+- Score cards
+- Diagnosis
+- Hotspots
+- Red Flags
+- Redemption
+- Footer
+- Tone
+- Implementation notes for agents
+
 The roast report is rendered as a single self-contained HTML file in the OS temp directory. Use the scan JSON as the source of truth for counts, paths, scores, severities, and redaction state. The HTML should feel like a full-screen app from a classic Macintosh System 1.x / early Finder machine: black-and-white, pixel-forward, ruled boxes, compact bitmap-style typography, and one main page.
 
 Do not generate a modern dashboard. Do not use Tailwind, Mermaid, chart libraries, web fonts, external images, or JavaScript. The report must be static HTML + inline CSS so it is easy for low-context agents to reproduce.

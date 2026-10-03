@@ -21,5 +21,5 @@ Use this checklist during every batch cleanup operation.
 
 - [ ] Verify zero inbox links remain: `grep -r "inbox/" wiki/ --include="*.md"` → should return nothing
 - [ ] Verify identity file count matches (or is ≤) linked page count
-- [ ] Run vault audit or grep for broken links
+- [ ] Run the `wiki-core` lint or grep for broken links
 - [ ] Commit atomically: `git add -A && git commit -m "cleanup: migrate inbox to sources"`

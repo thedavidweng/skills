@@ -1,95 +1,95 @@
-#!/bin/bash
-# AEO Quick Check — run against a local dev server or deployed URL
-# Usage: ./aeo-check.sh [BASE_URL]
-# Default: http://localhost:3000
+#!/usr/bin/env bash
+# AEO quick check against a deployed site.
+# Usage: aeo-check.sh https://example.com
+# Exit code = number of failed standard checks. Opt-in conventions are reported, never counted.
 
-BASE="${1:-http://localhost:3000}"
+if [ $# -lt 1 ]; then
+  echo "usage: $0 BASE_URL   (the deployed URL, not localhost)" >&2
+  exit 2
+fi
+
+BASE="${1%/}"
 FAIL=0
 
 pass() { echo "  ✓ $1"; }
 fail() { echo "  ✗ $1"; FAIL=$((FAIL + 1)); }
+info() { echo "  · $1"; }
 
-echo "=== AEO Quick Check: $BASE ==="
+fetch() { curl -sfL --max-time 20 "$@"; }
+
+echo "=== AEO quick check: $BASE ==="
 
 echo ""
-echo "--- Discovery & Crawlability ---"
+echo "--- Discovery (standard) ---"
 
-if curl -sf "$BASE/sitemap.xml" > /dev/null 2>&1; then
-  pass "sitemap.xml"
+if fetch "$BASE/sitemap.xml" | grep -qE '<(urlset|sitemapindex)'; then
+  pass "sitemap.xml (urlset or sitemapindex)"
 else
-  fail "sitemap.xml"
+  fail "sitemap.xml missing or not a sitemap"
 fi
 
-if curl -sf "$BASE/robots.txt" > /dev/null 2>&1; then
+ROBOTS=$(fetch "$BASE/robots.txt")
+if [ -n "$ROBOTS" ]; then
   pass "robots.txt"
+  if printf '%s\n' "$ROBOTS" | grep -qi '^sitemap:'; then
+    pass "robots.txt has Sitemap: line"
+  else
+    fail "robots.txt has no Sitemap: line"
+  fi
 else
-  fail "robots.txt"
-fi
-
-LINK=$(curl -sI "$BASE/" 2>/dev/null | grep -i '^Link:')
-if echo "$LINK" | grep -qi 'llms.txt'; then
-  pass "Link header contains llms.txt"
-else
-  fail "Link header missing llms.txt"
-fi
-
-echo ""
-echo "--- LLM Discovery ---"
-
-if curl -sf "$BASE/llms.txt" | head -1 | grep "^# " > /dev/null 2>&1; then
-  pass "llms.txt (text/plain with heading)"
-else
-  fail "llms.txt"
-fi
-
-SIZE=$(curl -sf "$BASE/llms-full.txt" | wc -c | tr -d ' ')
-if [ "$SIZE" -gt 2000 ] 2>/dev/null; then
-  pass "llms-full.txt ($SIZE bytes)"
-else
-  fail "llms-full.txt (too short or missing)"
-fi
-
-if curl -sf "$BASE/index.md" | head -1 | grep "^# " > /dev/null 2>&1; then
-  pass "index.md (markdown with heading)"
-else
-  fail "index.md"
+  fail "robots.txt missing"
 fi
 
 echo ""
-echo "--- Agent Views ---"
+echo "--- llms.txt (standard) ---"
 
-if curl -sf "$BASE/agent" | jq -e '.identity' > /dev/null 2>&1; then
-  pass "/agent (valid JSON)"
+if fetch "$BASE/llms.txt" | head -1 | grep -q '^# '; then
+  pass "llms.txt starts with an H1"
 else
-  fail "/agent (invalid or missing)"
-fi
-
-if curl -sf "$BASE/?mode=agent" | grep -q '<h1>' > /dev/null 2>&1; then
-  pass "?mode=agent (semantic HTML with h1)"
-else
-  fail "?mode=agent"
+  fail "llms.txt missing or does not start with '# '"
 fi
 
 echo ""
-echo "--- Structured Data ---"
+echo "--- Raw HTML (standard) ---"
 
-HTML=$(curl -sf "$BASE/")
-if echo "$HTML" | grep -q 'application/ld+json'; then
+HTML=$(fetch "$BASE/")
+if printf '%s' "$HTML" | grep -q '<h1'; then
+  pass "h1 in server-rendered HTML"
+else
+  fail "no h1 in server-rendered HTML"
+fi
+
+if printf '%s' "$HTML" | grep -q 'application/ld+json'; then
   pass "JSON-LD present"
 else
   fail "JSON-LD missing"
 fi
 
-if echo "$HTML" | grep -q '<h1'; then
-  pass "h1 in raw HTML"
-else
-  fail "h1 missing from raw HTML"
-fi
+for tag in 'og:title' 'og:description' 'og:image'; do
+  if printf '%s' "$HTML" | grep -q "property=\"$tag\""; then
+    pass "$tag"
+  else
+    fail "$tag missing"
+  fi
+done
 
 echo ""
-if [ $FAIL -eq 0 ]; then
-  echo "=== ALL CHECKS PASSED ==="
+echo "--- Opt-in conventions (informational) ---"
+
+LINK=$(curl -sIL --max-time 20 "$BASE/" | grep -i '^link:')
+[ -n "$LINK" ] && info "Link header: $LINK" || info "no Link header"
+
+SIZE=$(fetch "$BASE/llms-full.txt" | wc -c | tr -d ' ')
+[ "${SIZE:-0}" -gt 0 ] && info "llms-full.txt ($SIZE bytes)" || info "no llms-full.txt"
+
+fetch "$BASE/index.md" | head -1 | grep -q '^# ' && info "index.md present" || info "no index.md"
+fetch "$BASE/agent" | jq -e . >/dev/null 2>&1 && info "/agent returns JSON" || info "no /agent JSON"
+fetch "$BASE/.well-known/agent-card.json" | jq -e . >/dev/null 2>&1 && info "A2A agent card present" || info "no A2A agent card"
+
+echo ""
+if [ "$FAIL" -eq 0 ]; then
+  echo "=== ALL STANDARD CHECKS PASSED ==="
 else
-  echo "=== $FAIL CHECK(S) FAILED ==="
+  echo "=== $FAIL STANDARD CHECK(S) FAILED ==="
 fi
-exit $FAIL
+exit "$FAIL"

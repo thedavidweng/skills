@@ -1,2 +1,4 @@
-name: wiki-linking
-description: Wikipedia-style inline linking for Obsidian wiki vaults. USE THIS SKILL whenever the user wants to link wiki pages, add wikilinks, audit backlinks, or verify link legitimacy.
+interface:
+  display_name: "Wiki Linking"
+  short_description: "Inline wikilinks and backlink checks"
+  default_prompt: "Use $wiki-linking to add missing inline links across the wiki."

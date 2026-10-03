@@ -1,2 +1,4 @@
-name: wiki-core
-description: USE THIS SKILL whenever the user wants to: build a personal knowledge
+interface:
+  display_name: "Wiki Core"
+  short_description: "Build and maintain a personal markdown wiki"
+  default_prompt: "Use $wiki-core to absorb my recent sources into the wiki."

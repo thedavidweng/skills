@@ -1,6 +1,6 @@
 # Cleanup & Breakdown Workflows
 
-> Load this reference when executing `/wiki cleanup` or `/wiki breakdown`.
+> Load this when the user asks for a full-vault cleanup, or to find and create missing articles.
 
 ## Cleanup
 

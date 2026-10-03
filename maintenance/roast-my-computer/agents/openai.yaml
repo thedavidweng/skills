@@ -1,12 +1,4 @@
-name: roast-my-computer
-description: |
-  Scan a user's local computer and generate a privacy-safe developer roast
-  report. Scores messy project folders, home/downloads/desktop folders,
-  abandoned projects, git hygiene, AI slop, leaked-secret risk, unused tooling,
-  dependency graveyards, and hackathon demos. Runs locally on macOS, Linux, or
-  Windows without uploading private files; secret values stay redacted.
-
-  Triggers on: "roast my computer", "audit dev environment", "score my machine",
-  "shame my laptop", "clean up local dev", "dev environment roast",
-  "developer hygiene audit", "scan for AI slop", "dependency graveyard",
-  "hackathon demo roast".
+interface:
+  display_name: "Roast My Computer"
+  short_description: "Privacy-safe roast report of your dev machine"
+  default_prompt: "Use $roast-my-computer to scan this project and roast my dev environment."

@@ -1,2 +1,4 @@
-name: cover-letter
-description: Generate professional cover letters as PDF using Typst. Use when the user needs to create, edit, or regenerate a cover letter. Outputs a .typ source file compiled on demand — no PDF persistence needed.
+interface:
+  display_name: "Cover Letter"
+  short_description: "Typst cover letters compiled to PDF"
+  default_prompt: "Use $cover-letter to write a cover letter for this job posting."

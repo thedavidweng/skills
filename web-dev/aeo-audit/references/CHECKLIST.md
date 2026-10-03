@@ -1,217 +1,152 @@
-# AEO Audit: Full Checklist Reference
+# AEO Audit: Full Checklist
 
-This file contains the complete audit checklist that the agent iterates through. The main `SKILL.md` contains summaries; this reference expands every check with full detail.
+Every check is one of:
 
-## A. Discovery & Crawlability
+- **Standard**: a published spec or a convention agents and crawlers actually read. Missing it is a finding.
+- **Opt-in**: a site-specific convention with no wide agent support. Check it only when the site already advertises it, or when the user asks for it. Never rank a missing opt-in endpoint as critical.
 
-### A1. Sitemap (`/sitemap.xml`)
-- Must return valid XML with `<urlset>` or `<sitemapindex>`
-- Must include all indexable pages
-- Should include `<lastmod>` dates for content freshness signals
+## Contents
 
-### A2. robots.txt (`/robots.txt`)
-- Must not blanket `Disallow: /`
-- Should include `Sitemap:` directive pointing to sitemap
-- Should not block agent endpoints (`/llms.txt`, `/agent`, etc.)
+- A. Discovery and crawlability
+- B. LLM discovery (llms.txt)
+- C. Agent views (opt-in)
+- D. Structured data (schema.org)
+- E. Meta and Open Graph
+- F. Semantic HTML and accessibility
+- G. Agent cards and APIs (conditional)
+- H. Content freshness
 
-### A3. HTTP Link Headers
-- Set on the homepage (`/`)
-- Must include: `</llms.txt>; rel="llms.txt"`, `</sitemap.xml>; rel="sitemap"`, `</robots.txt>; rel="robots"`
-- Should include agent endpoints if they exist: `</agent>; rel="agent-catalog"`, `</index.md>; rel="index.md"`, `</llms-full.txt>; rel="llms-full.txt"`
-- **Critical pitfall**: Only reference endpoints that return HTTP 200. A 404 in a Link header is worse than no header.
+## A. Discovery and crawlability
 
-### A4. `/.well-known/llms.txt`
-- Optional alias for `/llms.txt`
-- Useful if other tools expect the `.well-known` path
-- Can be a redirect or duplicate content
+### A1. Sitemap (`/sitemap.xml`), standard
+- Valid XML with `<urlset>` or `<sitemapindex>`
+- Lists every indexable page; every listed URL returns 200
+- `<lastmod>` on pages that change
 
-## B. LLM Discovery
+### A2. robots.txt (`/robots.txt`), standard
+- No blanket `Disallow: /`
+- `Sitemap:` line pointing at the sitemap
+- Does not block `/llms.txt` or other agent files
+- AI crawler user agents (`GPTBot`, `ClaudeBot`, `PerplexityBot`, `Google-Extended`) are allowed or blocked on purpose, not by accident. Report what the file does; the policy is the owner's call.
 
-### B1. `/llms.txt`
-Format: plain text, top-level `# ` heading.
+### A3. HTTP `Link` header on `/`, opt-in
+- `rel="sitemap"` is the only widely used relation here. Values such as `rel="llms.txt"` are site conventions.
+- **Pitfall:** only list URLs that return 200. A 404 in a Link header is worse than no header.
 
-Required sections:
-- `# {Name} — {Tagline}`
-- `## Overview` — what the site does
-- `## Services / Capabilities` — key offerings
-- `## Contact` — email, location
-- `## Machine-Readable Endpoints` — list of agent URLs
+## B. LLM discovery
 
-### B2. `/llms-full.txt`
-- Complete site content in a single file
-- Should be >2000 chars for sites with >3 pages
-- Auto-generate from canonical content sources when possible
-- Include: identity, services, projects, about, contact, navigation, agent endpoints
+### B1. `/llms.txt`, standard (llmstxt.org proposal)
+Follow the format at https://llmstxt.org:
+- One `# Name` H1, required
+- Optional `> summary` blockquote
+- Optional prose, then `## Section` headings containing Markdown link lists: `- [Title](url): note`
+- An `## Optional` section marks links an agent can skip under a tight context budget
+- Served as plain text or Markdown at the site root; keep it well under a model's context window
 
-### B3. Per-section `llms.txt`
-- Only create if the site has distinct sections (`/docs/`, `/api/`, `/blog/`)
-- Each file provides scoped context for that section
-- Do NOT create empty placeholders
+### B2. `/llms-full.txt`, opt-in
+- The full site content in one file, generated from the same source as the pages
+- Flag it when it is visibly out of date or truncated, not for its size
 
-### B4. `/.well-known/llms.txt`
-- Alias for B1
-- Optional, but recommended for standards compliance
+### B3. Per-section `llms.txt`, opt-in
+- Only for sites with distinct sections (`/docs/`, `/api/`)
+- No empty placeholders
 
-## C. Agent Views
+### B4. `/.well-known/llms.txt`, opt-in
+- Alias or redirect to `/llms.txt`; content must match
 
-### C1. `?mode=agent` on Homepage
-- Must return DIFFERENT content from normal homepage — not the same marketing HTML
-- Must be semantic HTML: `<h1>`, `<h2>`, `<ul>`, `<li>`, `<a>` with direct hrefs
-- No heavy CSS frameworks, no JavaScript-dependent content
-- Light inline styles acceptable for readability
-- Include: identity, services, projects, contact, navigation, machine-readable endpoints
+## C. Agent views (opt-in)
 
-### C2. `/agent` JSON Endpoint
-Response schema:
-```json
-{
-  "identity": { "name": "...", "roles": [...] },
-  "services": [{ "name": "...", "description": "..." }],
-  "projects": [{ "slug": "...", "title": "...", "url": "..." }],
-  "contact": { "email": "...", "linkedIn": "..." },
-  "meta": {
-    "website": "...",
-    "llmsTxt": "...",
-    "agentEndpoint": "...",
-    "markdownVersion": "..."
-  }
-}
-```
+These are site conventions, not standards. Audit them only if the site links to them.
 
-Headers:
-- `Content-Type: application/json; charset=utf-8`
-- `X-Robots-Tag: noindex`
-- `Cache-Control: public, max-age=3600`
+### C1. `?mode=agent`
+- Returns content different from the marketing HTML: semantic HTML, direct `href`s, no JS-dependent content
 
-### C3. `/index.md` Markdown Fallback
-- Content-Type: `text/markdown; charset=utf-8`
-- Body must start with `# ` (top-level heading)
-- Mirrors homepage content in Markdown
-- Include agent endpoint links at the bottom
+### C2. `/agent` JSON endpoint
+- `Content-Type: application/json; charset=utf-8`, valid JSON, content matching the visible site
+- `X-Robots-Tag: noindex` keeps it out of search results
 
-### C4. Server-Side Rendering
-- Raw HTML must contain meaningful content without JS execution
-- Must have `<h1>` and >500 chars of text in the HTML response
-- Next.js App Router satisfies this by default
-- SPA frameworks (React Router, Vue Router) may need prerendering
+### C3. `/index.md`
+- `Content-Type: text/markdown; charset=utf-8`, body starts with `# `, mirrors the homepage
 
-## D. Structured Data (Schema.org)
+### C4. Server-side rendering, standard
+- Raw HTML (no JS) has an `<h1>` and the main content text
+- Next.js App Router and most SSG frameworks do this by default; client-only SPAs need prerendering
 
-### D1. Person / Organization Schema
-Required fields:
-- `name`, `url`, `description`
-- `sameAs` — array of external profiles (LinkedIn, GitHub, etc.)
-- `jobTitle` or `knowsAbout` for capabilities
-- `email` (optional but standard)
+## D. Structured data (schema.org)
 
-### D2. WebSite Schema
-- `name`, `url`, `description`, `inLanguage`
-- Injected on every page (typically via root layout)
+Validate with https://validator.schema.org. Structured data must match visible content.
 
-### D3. CreativeWork / BlogPosting Schema
-- Per-page schema for projects, articles, blog posts
-- `name`, `description`, `creator` (Person type), `dateCreated`, `keywords`
-- `image` and `thumbnailUrl` if cover image exists
+### D1. Person / Organization
+- `name`, `url`, `description`, `sameAs` (external profiles); `logo` for organizations
 
-### D4. BreadcrumbList Schema
-- For sites with hierarchical navigation
-- Map each navigation level to `ListItem` with `name` and `item`
+### D2. WebSite
+- `name`, `url`; `inLanguage` when the site is not English-only
 
-### D5. Service / Offer Schema
-- Use `hasOfferCatalog` on Person/Organization
-- Each service is an `Offer` with `itemOffered` → `Service`
-- `name` and `description` for each service
+### D3. Article / BlogPosting / CreativeWork
+- Per page: `headline` or `name`, `datePublished`, `dateModified`, `author`, `image` when there is a cover
 
-### D6. NLWeb Schema Feed
-- Only for sites with programmatic capabilities (API, MCP, etc.)
-- Feed URL typically `/nlweb-schema.json`
-- Describes capabilities in NLWeb format
-- Skip for static portfolio, blog, documentation sites
+### D4. BreadcrumbList
+- Sites with hierarchical navigation: one `ListItem` per level with `name` and `item`
 
-## E. Meta & Open Graph
+### D5. Product / Service / Offer
+- Only for sites that sell something; prices must match the visible page
 
-### E1. `<title>` Tag
-- Unique per page
-- Descriptive, not generic ("Home" is bad)
+### D6. NLWeb, opt-in
+- Only when the site runs an NLWeb endpoint; skip for static sites
+
+## E. Meta and Open Graph
+
+### E1. `<title>`
+- Unique and descriptive per page ("Home" is a finding)
 
 ### E2. `<meta name="description">`
-- 50-160 characters
-- Descriptive, keyword-relevant
-- Unique per page
+- Unique per page, roughly 50–160 characters
 
-### E3. Open Graph Tags (5 required)
-- `og:title` — matches `<title>`
-- `og:description` — matches meta description
-- `og:type` — usually `website` or `article`
-- `og:url` — canonical URL
-- `og:image` — 1200×630 recommended
+### E3. Open Graph
+- `og:title`, `og:description`, `og:type`, `og:url`, `og:image` (1200×630 is the common size)
 
-### E4. Twitter Card Tags
-- `twitter:card` — `summary_large_image` recommended
-- `twitter:title`, `twitter:description`
-- Optional: `twitter:image`, `twitter:site`
+### E4. Twitter / X card
+- `twitter:card` (`summary_large_image` for pages with images); falls back to Open Graph for title and description
 
-### E5. Cross-Signal Consistency
-All these signals must describe the same entity with consistent messaging:
-- `<title>` tag
-- `og:title`
-- JSON-LD `name` (Person/WebSite)
-- `<meta name="description">`
-- `og:description`
-- JSON-LD `description`
+### E5. Cross-signal consistency
+- `<title>`, `og:title`, and JSON-LD `name` describe the same entity
+- Meta description, `og:description`, and JSON-LD `description` agree
+- Report each mismatch with both values
 
-Minimum 3 signals must be aligned. Mismatches confuse agents.
+## F. Semantic HTML and accessibility
 
-## F. Semantic HTML & Accessibility
+### F1. Headings
+- One `<h1>` per page; no skipped levels
 
-### F1. Heading Hierarchy
-- Exactly one `<h1>` per page
-- Logical progression: h1 → h2 → h3 (no skipped levels)
-- No multiple h1s
+### F2. Images
+- Every `<img>` has `alt`; decorative images use `alt=""`; no generic "image" or "photo"
 
-### F2. Alt Text on Images
-- All `<img>` tags must have `alt` attribute
-- Decorative images: `alt=""`
-- Content images: descriptive alt text
+### F3. Galleries and visual content
+- Containers have `role="list"` or an `aria-label`; image alt names the subject
 
-### F3. Visual Content Labeling
-- Portfolio images: alt = project title + context
-- Gallery containers: `role="list"` or `aria-label`
-- Avoid generic alt like "image" or "photo"
+### F4. Link text
+- No bare "click here" or "read more"; link text names the destination
 
-### F4. Link Text
-- No standalone "click here", "read more", "link"
-- Use context-specific text: "Read FRAÜD case study"
+## G. Agent cards and APIs (conditional)
 
-## G. Agent-Card & API (Conditional)
+Skip this section for sites with no programmable interface.
 
-### G1. `agent-card.json`
-- Only for sites with API, MCP, or programmable interface
-- Contains `name`, `description`, `capabilities`, `endpoints`
-- See https://agent-card.org for spec
+### G1. A2A Agent Card
+- Only for sites that run an A2A agent: `/.well-known/agent-card.json` per https://a2a-protocol.org
 
-### G2. `pricing.md`
-- Only for SaaS, product, or service-based business
-- Clear tiers, features, limits
-- Skip for personal portfolio, blog, free OSS
+### G2. MCP server
+- Only if the site actually runs one; document its URL and auth in `/llms.txt`
 
-### G3. MCP Server Description
-- Only if you actually run an MCP server
-- Document in `/llms.txt` or dedicated endpoint
-- Do not claim MCP if you don't have one
+### G3. API documentation
+- Public APIs: an OpenAPI spec or structured docs linked from `/llms.txt`, including auth requirements
 
-### G4. API Documentation
-- Only for sites with public API
-- Agent-readable format: OpenAPI spec, `/api/llms.txt`, or structured docs
-- Include auth requirements and endpoint descriptions
+### G4. Pricing
+- SaaS or paid products: pricing reachable as plain HTML or Markdown, tiers and limits stated
 
-## H. Content Freshness
+## H. Content freshness
 
-### H1. Human-Agent Sync
-- Agent files must reflect current human-visible content
-- Check: project counts match, URLs valid, descriptions consistent
-- Maintain `agents.md` documenting auto-sync vs manual-update files
+### H1. Human-agent sync
+- Agent-facing files (`llms.txt`, JSON-LD, any opt-in endpoints) match the current visible site: counts, URLs, names, descriptions
 
-### H2. No Placeholders
-- No "Lorem ipsum", "TODO", "Coming soon"
-- No outdated dates or broken links
+### H2. No placeholders
+- No "Lorem ipsum", "TODO", "Coming soon", stale dates, or broken links

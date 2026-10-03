@@ -1,2 +1,4 @@
-name: cli-invoice
-description: Generate invoices as PDF using the maaslalani/invoice CLI. Use when the user needs to create or regenerate an invoice. The CLI command itself is the source — store it in notes, regenerate on demand.
+interface:
+  display_name: "CLI Invoice"
+  short_description: "Generate PDF invoices from a stored CLI command"
+  default_prompt: "Use $cli-invoice to generate an invoice for this client and work period."

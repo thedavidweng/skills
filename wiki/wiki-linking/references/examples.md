@@ -51,7 +51,7 @@ Project Alpha is a research initiative.
 ```markdown
 # Project Alpha
 
-[[project-alpha|Project Alpha]] is a research initiative led by [[alice-smith|Alice Smith]] at [[openai|OpenAI]].
+Project Alpha is a research initiative led by [[alice-smith|Alice Smith]] at [[openai|OpenAI]].
 ```
 
 ## Example 4: YAML title quoting

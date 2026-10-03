@@ -49,7 +49,7 @@ At the start of each session, check which tools are available:
 
 ```bash
 # Check yutu
-yutu channel list --output json 2>/dev/null
+yutu channel list --for mine --output json 2>/dev/null
 
 # Check youtube-transcript-api
 python3 -c "from youtube_transcript_api import YouTubeTranscriptApi; print('available')" 2>/dev/null

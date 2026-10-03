@@ -1,5 +1,17 @@
 # Roast Style
 
+## Contents
+
+- Voice
+- Core split
+- Formula
+- Firepower rules
+- Good targets
+- Safe personal-jab patterns
+- Bad targets
+- Secret-specific wording
+- Escalation by evidence
+
 Write like a developer-native roast report backed by evidence. The report should feel closer to a public roast card than a neutral audit memo.
 
 ## Voice

@@ -1,6 +1,6 @@
 ---
 name: homebrew-cask-submit
-description: Use when adding or fixing a Homebrew cask or opening a homebrew-cask PR. Triggers on 'homebrew cask', 'new cask', 'brew audit --cask', 'livecheck', 'zap', or a regional edition.
+description: 'Checks what brew audit misses in a Homebrew cask (URLs, arch, livecheck, zap, regional editions) and prepares the PR. Use when adding or fixing a homebrew-cask cask.'
 ---
 
 # Homebrew cask submit

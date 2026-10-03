@@ -1,5 +1,10 @@
 # Brand Guide Auto-Generation
 
+## Contents
+
+- Auto-Generation Process
+- Token Reference
+
 When no brand guide is provided, the skill auto-generates one from recent videos.
 
 
@@ -10,9 +15,9 @@ When no brand guide is provided, the skill will:
 ### Step 1: Fetch Recent Videos
 
 ```bash
-# Get last 10-15 video titles and descriptions
-# Get last 10-15 video titles and descriptions
-yutu search --channelId CHANNEL_ID --type video --maxResults 15 --output json
+# Last 15 uploads, then full snippets (search results omit full descriptions and tags)
+yutu search list --channelId CHANNEL_ID --types video --order date --maxResults 15 --output json
+yutu video list --ids ID1,ID2,... --output json
 ```
 
 ### Step 2: Analyze Patterns

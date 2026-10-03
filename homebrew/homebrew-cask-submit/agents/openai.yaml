@@ -1,5 +1,4 @@
-name: homebrew-cask-submit
-description: >
-  Use when adding or fixing a Homebrew cask, or opening a homebrew-cask pull
-  request, and the download URL, architecture, livecheck, zap paths, or a
-  regional edition are unclear.
+interface:
+  display_name: "Homebrew Cask Submit"
+  short_description: "Check a Homebrew cask and prepare its PR"
+  default_prompt: "Use $homebrew-cask-submit to add this app as a Homebrew cask and prepare the PR."

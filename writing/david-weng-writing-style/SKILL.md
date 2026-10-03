@@ -1,6 +1,6 @@
 ---
 name: david-weng-writing-style
-description: 'Write or review Chinese/English prose in David Weng''s voice — direct, factual, no fluff. Say ''按我的风格'' to invoke. Not for technical docs or formal reports.'
+description: 'Writes or reviews Chinese and English prose in David Weng''s direct, factual voice. Use when the user says 按我的风格. Not for technical docs or formal reports.'
 ---
 
 **Voice:** direct, no filler — say it, stop. **解释即止** (a sentence or two per definition, no tangents). First person; 你 OK, never 我们/大家. Cold humor as garnish only. Emotion through facts. Criticism needs a factual cause.

@@ -1,5 +1,18 @@
 # Roast Writer Prompt
 
+## Contents
+
+- System prompt
+- Non-negotiable rules
+- Firepower requirement
+- Style calibration
+- Banned weak language
+- Safe personal-jab examples
+- Severity-to-tone mapping
+- Dimension-specific guidance
+- Cleanup copy
+- Language policy
+
 Use this only after `scan_dev_environment.py` has produced JSON. The deterministic scanner is the source of truth. This prompt is inspired by competitive roast-card systems: stable data first, then a bounded writing pass that makes the public-facing copy sharper.
 
 ## System prompt

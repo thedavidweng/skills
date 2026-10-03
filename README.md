@@ -37,7 +37,6 @@ Build and maintain a compounding knowledge base from your notes, messages, and d
 | **[wiki-slug-rename](wiki/wiki-slug-rename/)** | Rename page slugs without breaking links across the vault. |
 | **[wiki-sources](wiki/wiki-sources/)** | Source layer: inline vs file, ingest certificates/contracts, protect `## Sources` sections. |
 | **[wiki-vcf-import](wiki/wiki-vcf-import/)** | Import VCF contacts into `wiki/people/` pages. Handles Chinese name reversal and phone masking. |
-| **[wiki-audit](wiki/wiki-audit/)** | Full vault audit: orphans, broken links, duplicates, stubs, tag compliance, content hygiene. |
 | **[wiki-quartz-publish](wiki/wiki-quartz-publish/)** | Publish your wiki as a private Quartz site. Strongly recommends Cloudflare Access / Zero Trust. |
 
 ### Content Operations
@@ -55,16 +54,14 @@ Text-as-source document workflows. Manage source files, not PDFs — generate on
 | Skill | Description |
 |-------|-------------|
 | **[cover-letter](document-generation/cover-letter/)** | Professional cover letters via Typst. Calibrated template with precise typography — one command to PDF. |
-| **[json-resume](document-generation/json-resume/)** | Structured resumes via JSON Resume standard. Data/style separation, themed rendering, auto-publish to registry. |
 | **[cli-invoice](document-generation/cli-invoice/)** | CLI-based invoices via maaslalani/invoice. The command is the source file — store in notes, regenerate anytime. |
 
 ### Code Quality
 
-Systematic codebase maintenance for AI-first and vibe-coding teams.
+Production-readiness review for Go codebases.
 
 | Skill | Description |
 |-------|-------------|
-| **[entropy-reduction](code-review/entropy-reduction/)** | Identify and fix structural, semantic, behavioral, and evolutionary disorder through safe, incremental refactoring. |
 | **[go-production-review](code-review/go-production-review/)** | Audit Go codebases against production best practices — modules, error handling, concurrency, tests, security, CI/CD, observability. |
 
 ### Web Development
@@ -108,9 +105,8 @@ Once installed, prompt your agent naturally:
 "Build a wiki from my notes and messages"
 "Audit my wiki for broken links and orphan pages"
 "Write a YouTube description for this video"
-"Refactor this codebase to reduce tech debt"
+"Audit this Go service for production readiness"
 "Write a cover letter for this job posting"
-"Render my resume as PDF"
 "Generate an invoice for last month's work"
 ```
 
