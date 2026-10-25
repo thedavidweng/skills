@@ -1,6 +1,7 @@
 {
   "name": "david-skills",
   "skills": [
+    "./maintenance/ci-slim",
     "./maintenance/roast-my-computer",
     "./maintenance/skill-repo-maintenance",
     "./maintenance/stale-docs-cleanup",

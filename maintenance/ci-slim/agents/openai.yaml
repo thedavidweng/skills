@@ -1,0 +1,4 @@
+interface:
+  display_name: "CI Slim"
+  short_description: "Delete low-value tests and duplicate CI jobs"
+  default_prompt: "Use $ci-slim to measure this repo's CI and cut tests and jobs that waste runner time."

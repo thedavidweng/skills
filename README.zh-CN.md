@@ -92,6 +92,7 @@ Go 代码库的生产就绪审查。
 
 | 技能 | 说明 |
 |------|------|
+| **[ci-slim](maintenance/ci-slim/)** | 缩短 CI 时间、节省 runner 分钟数：先测量耗时，再删除低价值测试和 AI 写的防御性测试，去掉重复 job。 |
 | **[roast-my-computer](maintenance/roast-my-computer/)** | 扫描本地机器，生成隐私安全的开发者吐槽报告——废弃项目、依赖坟场、Git 耻辱、AI 垃圾、脱敏后的泄密风险。 |
 | **[skill-repo-maintenance](maintenance/skill-repo-maintenance/)** | 维护和重组 Agent Skills 仓库。重命名技能、修复安装命令、规避 CLI 陷阱。 |
 | **[stale-docs-cleanup](maintenance/stale-docs-cleanup/)** | 清理过期文档，将未来工作移入 issue，保留面向人工的指南和冻结接口契约。 |
