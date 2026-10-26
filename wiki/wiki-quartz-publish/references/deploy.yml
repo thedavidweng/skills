@@ -16,19 +16,28 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
 
     steps:
       - name: Checkout site repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Resolve content ref
         id: content
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          CONTENT_REPO: ${{ github.event.client_payload.content_repo }}
+          CONTENT_SHA: ${{ github.event.client_payload.content_sha }}
         run: |
-          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            echo "repo=${{ github.event.client_payload.content_repo }}" >> "$GITHUB_OUTPUT"
-            echo "sha=${{ github.event.client_payload.content_sha }}" >> "$GITHUB_OUTPUT"
+          if [ "$EVENT_NAME" = "repository_dispatch" ]; then
+            [[ "$CONTENT_REPO" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]
+            [[ "$CONTENT_SHA" =~ ^[a-fA-F0-9]{40}$ ]]
+            echo "repo=$CONTENT_REPO" >> "$GITHUB_OUTPUT"
+            echo "sha=$CONTENT_SHA" >> "$GITHUB_OUTPUT"
           else
             echo "repo=YOUR_USERNAME/content-repo" >> "$GITHUB_OUTPUT"
             echo "sha=main" >> "$GITHUB_OUTPUT"
@@ -41,9 +50,10 @@ jobs:
           ref: ${{ steps.content.outputs.sha }}
           token: ${{ secrets.CONTENT_REPO_READ_TOKEN }}
           path: external/content
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
           cache: "npm"
@@ -70,11 +80,14 @@ jobs:
         run: npx cf deploy
 
       - name: Write summary
+        env:
+          CONTENT_REPO: ${{ steps.content.outputs.repo }}
+          CONTENT_SHA: ${{ steps.content.outputs.sha }}
         run: |
           {
             echo "## Quartz deployment"
             echo ""
-            echo "- content_repo: ${{ steps.content.outputs.repo }}"
-            echo "- content_sha: ${{ steps.content.outputs.sha }}"
+            echo "- content_repo: $CONTENT_REPO"
+            echo "- content_sha: $CONTENT_SHA"
             echo "- worker: your-wiki"
           } >> "$GITHUB_STEP_SUMMARY"
