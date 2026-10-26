@@ -16,7 +16,8 @@ concurrency:
 jobs:
   mirror:
     name: Mirror
-    runs-on: ubuntu-slim
+    # The mirror is a Docker action; ubuntu-slim has no Docker daemon.
+    runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
