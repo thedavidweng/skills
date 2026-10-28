@@ -24,7 +24,7 @@ Supply-chain settings:
 
 ## Speed
 
-CI: `ci_compare.sh`, medians over <n> warm attempts each, same job matrix.
+CI: `ci_compare.sh`, medians over <n> existing runs before and <n> after, same job matrix.
 Local: second run on <machine>.
 
 | Measure | Before | After | Change |
