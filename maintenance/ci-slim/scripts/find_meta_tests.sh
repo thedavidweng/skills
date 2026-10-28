@@ -13,7 +13,7 @@ tests=$(git ls-files | grep -E '(\.(test|spec)\.[cm]?[jt]sx?$|_test\.(go|py)$|(^
 [ -z "$tests" ] && { echo "no test files found"; exit 0; }
 
 read_re='readFileSync|readFile\(|readdirSync|open\(|os\.ReadFile|Path\([^)]*\)\.read_text|execFileSync|execSync|subprocess\.'
-target_re='\.md["'\''`]|package\.json|lock|\.ya?ml|\.gitignore|wrangler|tsconfig|\.github|docs/|README|\.(ts|tsx|js|py|go)["'\''`]'
+target_re='\.md["'\''`]|package\.json|lock|\.ya?ml|\.gitignore|wrangler|cloudflare\.config|tsconfig|\.github|docs/|README|\.(ts|tsx|js|py|go)["'\''`]'
 
 printf '# Meta-test candidates\n\n'
 printf 'Each line: test file, then the matching lines. Review each before deleting.\n\n'
