@@ -1,13 +1,13 @@
 ---
 name: migrate-to-bun
-description: 'Migrates a JS/TS repo from pnpm, npm or Node to Bun, measures CI before and after, and opens a PR with a faster/slower table. Use when switching a project to Bun, bun install, bun test or setup-bun in CI.'
+description: 'Migrates a JS/TS repo from pnpm, npm or Node to Bun, measures speed before and after, and opens a PR with a faster/slower table. Use when switching a project to Bun, bun install, bun test or setup-bun in CI.'
 ---
 
 Switch one repo to Bun, prove nothing changed except speed, and open a PR whose table shows what got faster and what got slower. Work on a branch. Do not merge.
 
 **0. Use stable Bun only.** Run `bun --revision`. A `-canary` build ships commands that stable lacks (at 1.4.4: `bun lint`, `bun compile`, `--aot`, `--trim`). Check every Bun command you plan to use with `<cmd> --help` on the stable binary. Bun replaces the package manager, script runtime and test runner. `bun check` can replace `tsc --noEmit`, but switch only after both report the same errors on this repo; it still differs from `tsc` in edge cases. It does not replace Vite, Astro, `astro check`/`vue-tsc`, or Vite plugins. Leave lint and format on their current tool: `bun fmt` and oxfmt disagree on some files, and two formatters in one repo fight.
 
-**1. Baseline.** Rerun the latest green CI run on the default branch three times: `bash scripts/ci_compare.sh <run-id> 3`. It prints wall clock, summed job time and setup/install/task steps per attempt, plus medians. Locally, time each CI task twice on a clean clone and keep the second run. Record test counts.
+**1. Baseline.** Measure locally first: it costs nothing. On a clean clone, `time` each CI task and the install twice, and keep the second run. Record test counts. For CI, read runs that already exist; do not rerun them. Reruns use Actions minutes, which private repos pay for, and they repeat every step of the workflow, including any deploy, publish or image push. List the recent green runs on the default branch with `gh run list -w <workflow> -b <default-branch> -s success -L 3 --json databaseId -q '.[].databaseId'`, then pass them to `bash scripts/ci_compare.sh <run-id>...`. It prints wall clock, summed job time and per-step times for each run, plus medians. Rerun only when fewer than three runs exist, the workflow only checks (no deploy, publish or push), and the user agrees.
 
 **2. Package manager.** Run `bun install` to migrate the lockfile. Then delete the old lockfile, `pnpm-workspace.yaml` and `packageManager`. Bun copies `overrides` and `workspaces` into `package.json`, including nested `a>b` overrides (check `bun.lock`). The supply-chain settings it does not copy:
 
@@ -41,4 +41,4 @@ Any other key: look it up in `bun install --help` and the bunfig docs. Anything 
 - Test counts match.
 - `rm -rf node_modules && bun install --frozen-lockfile` succeeds.
 
-**8. PR.** Fill `references/pr-body.md` with the local numbers and open the PR. When the PR's CI is green, run `bash scripts/ci_compare.sh <pr-run-id> 3`. Its medians skip attempt 1, which may have run with cold caches. Put the CI rows into the body with `gh pr edit <n> --body-file <file>`. Keep every slower row in the table: a slower warm local install is common under Bun's isolated linker.
+**8. PR.** Fill `references/pr-body.md` with the local numbers and open the PR. When the PR's CI is green, run `bash scripts/ci_compare.sh <pr-run-id>` on its run (and on any later pushes' runs), then put the CI rows into the body with `gh pr edit <n> --body-file <file>`. State how many runs each side has. One run per side is noisy, so lead with the local numbers if CI has fewer than three. Keep every slower row in the table: a slower warm local install is common under Bun's isolated linker.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Migrate to Bun"
   short_description: "Move a repo to Bun and PR the before/after speed table"
-  default_prompt: "Use $migrate-to-bun to switch this repo to Bun, measure CI before and after, and open a PR with the comparison."
+  default_prompt: "Use $migrate-to-bun to switch this repo to Bun, measure speed before and after, and open a PR with the comparison."
