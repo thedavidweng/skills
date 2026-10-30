@@ -19,11 +19,11 @@ Cookbook, Acceptable Casks, and the checkout `CONTRIBUTING.md` already apply. St
 
 **Test.** `brew audit --cask --online --new <user>/<tap>/<token>` — auditing a path is disabled, and the three flags stay together. Tap a repo that contains only this cask. `brew untap --force` on a second full homebrew-cask checkout uninstalls the user's casks. `brew info` `From:` can be a custom remote. Run `brew trust <user>/<tap>` before the first audit — an untrusted tap refuses to load the cask and the run is wasted. `brew trust` has no delete verb: remove entries by stripping `<user>/` entries from `~/.homebrew/trust.json` (keys `trustedtaps`, `trustedcasks`, `trustedformulae`, `trustedcommands`), then `brew untap <user>/<tap>`. CI failure diagnosis while the run is in flight: `gh api repos/Homebrew/homebrew-cask/actions/runs/<id>/jobs --jq '.jobs[] | select(.conclusion == "failure") | {name, steps: [.steps[] | select(.conclusion == "failure") | .name]}'` — `gh run view --log-failed` refuses until the run completes. Install with `HOMEBREW_NO_INSTALL_FROM_API=1` and `--appdir=/tmp/cask-test`. Run `brew autoremove --dry-run` before uninstall. A `pkill -f` pattern must not appear in that same command.
 
-**PR.** Show the body before `gh pr create` unless the user already said to open it. Squash to one commit per cask, per that checkout's CONTRIBUTING. Checkbox lines stay byte-for-byte, including `<cask>`. Put the reason above the template. This prints `true`:
+**PR.** Show the body before `gh pr create` unless the user already said to open it. Squash to one commit per cask, per that checkout's CONTRIBUTING. Checkbox lines stay byte-for-byte, including `<cask>`. Put the reason above the template. The title is the commit subject verbatim: `<token> <version>`, `(new cask)` appended on a new cask, `<token>: <description>` on a fix — review renames unmarked new-cask titles by hand (`bevanjkay`, `SMillerDev` precedents), so set it right at creation. This prints `true`:
 
 ```sh
 gh api repos/Homebrew/.github/contents/.github/scripts/check_template.rb --jq .content | base64 --decode > /tmp/check_template.rb
-ruby /tmp/check_template.rb pull-request /tmp/pr_body.md .github/PULL_REQUEST_TEMPLATE.md "<token> <version>" Homebrew/homebrew-cask
+ruby /tmp/check_template.rb pull-request /tmp/pr_body.md .github/PULL_REQUEST_TEMPLATE.md "<commit-subject>" Homebrew/homebrew-cask
 ```
 
 Name the model on every PR it drafted. A non-maintainer has one open AI-assisted PR; do not relabel a drafted PR as unused AI. The user writes review replies. A template-bot close is fixed by editing the body.
